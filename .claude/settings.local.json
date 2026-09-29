@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(netstat -ano)",
+      "Bash(curl -s http://localhost:5173/)",
+      "Bash(npm run:*)"
+    ]
+  }
+}

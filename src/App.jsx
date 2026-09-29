@@ -455,9 +455,10 @@ function PostForm({onAdd,onCancel,type,month,year}){
         <FRow label="Status"><select value={d.status} onChange={e=>u("status",e.target.value)} style={{width:"100%",fontFamily:IN,fontWeight:700,fontSize:13,padding:"9px 10px",borderRadius:8,border:`1px solid ${ss.border}`,background:ss.bg,color:ss.color,boxSizing:"border-box"}}>{STATUSES.map(x=><option key={x}>{x}</option>)}</select></FRow>
       </div>
       {type==="feed"?(
-        <><FRow label="Subject *"><Inp value={d.subject} onChange={v=>u("subject",v)} placeholder="e.g. Blonde reveal — mineral detox"/></FRow>
+        <><FRow label="Subject *"><Inp value={d.subject} onChange={v=>u("subject",v)} placeholder="e.g. 
+        Room Rate Promos"/></FRow>
         <FRow label="Caption"><Txt value={d.caption} onChange={v=>u("caption",v)} rows={5} placeholder="Write the caption here..."/></FRow>
-        <FRow label="Hashtags"><Txt value={d.hashtags} onChange={v=>u("hashtags",v)} rows={2} placeholder="#TaraRoseSalon #DubaiHair ..."/></FRow>
+        <FRow label="Hashtags"><Txt value={d.hashtags} onChange={v=>u("hashtags",v)} rows={2} placeholder="#CGHM #HotelsInMakati ..."/></FRow>
         <MediaFields draft={d} setDraft={setD}/></>
       ):(
         <><FRow label="Frame descriptions (one per line)"><Txt value={d.frames} onChange={v=>u("frames",v)} rows={4} placeholder={"Frame 1: hook\nFrame 2: content\nFrame 3: CTA"}/></FRow>
@@ -539,7 +540,7 @@ function PostDetail({post,onClose,onStatus,onApproval,comment,setComment,onAddCo
       <div style={{margin:"14px 14px 0",border:`1px solid ${BORDER}`,borderRadius:10,overflow:"hidden"}}>
         <div style={{padding:"10px 12px",display:"flex",alignItems:"center",gap:8,borderBottom:`1px solid ${BORDER2}`,background:SURF2}}>
           <div style={{width:28,height:28,borderRadius:"50%",background:SURF3,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontFamily:IN,fontWeight:700,color:TEAL}}>TR</div>
-          <div style={{fontSize:13,fontFamily:IN,fontWeight:700,color:TX1}}>tararosesalon</div>
+          <div style={{fontSize:13,fontFamily:IN,fontWeight:700,color:TX1}}>citygardenhotelmakati</div>
           {post.format==="Reel"&&<span style={{marginLeft:"auto",fontSize:9,fontFamily:IN,fontWeight:700,background:"#111",color:"#fff",padding:"2px 7px",borderRadius:4,letterSpacing:"0.06em"}}>REEL</span>}
           {post.format==="Carousel"&&imgFiles.length>1&&<span style={{marginLeft:"auto",fontSize:9,fontFamily:IN,fontWeight:700,background:"#111",color:"#fff",padding:"2px 7px",borderRadius:4}}>{imgFiles.length} slides</span>}
         </div>
@@ -554,7 +555,7 @@ function PostDetail({post,onClose,onStatus,onApproval,comment,setComment,onAddCo
           }
         </div>
         <div style={{padding:"12px 14px",borderTop:`1px solid ${BORDER2}`,background:SURF}}>
-          <span style={{fontFamily:IN,fontSize:12,fontWeight:700,color:TX1}}>tararosesalon </span>
+          <span style={{fontFamily:IN,fontSize:12,fontWeight:700,color:TX1}}>citygardenhotelmakati </span>
           <span style={{fontFamily:IN,fontSize:12,fontWeight:600,color:TX2,lineHeight:1.8}}>{post.caption||<span style={{color:TX4,fontStyle:"italic"}}>No caption yet</span>}</span>
         </div>
         {post.hashtags&&<div style={{padding:"0 14px 12px",fontFamily:IN,fontSize:11,fontWeight:600,color:"#378ADD",lineHeight:1.7,background:SURF}}>{post.hashtags}</div>}
@@ -608,7 +609,7 @@ function StoryDetail({seq,onClose,onStatus,onApproval,comment,setComment,onAddCo
           <div style={{position:"absolute",top:0,left:0,right:0,padding:"12px 12px 0",pointerEvents:"none"}}>
             <div style={{display:"flex",alignItems:"center",gap:7,marginTop:imgs.length>1?24:0}}>
               <div style={{width:24,height:24,borderRadius:"50%",background:"rgba(0,0,0,0.4)",border:"1px solid rgba(255,255,255,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontFamily:IN,fontWeight:700,color:"#fff"}}>TR</div>
-              <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.8)"}}>tararosesalon</div>
+              <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.8)"}}>citygardenhotelmakati</div>
             </div>
           </div>
           <div style={{position:"absolute",bottom:16,left:14,right:14,display:"flex",flexDirection:"column",gap:6,pointerEvents:"none"}}>
@@ -651,7 +652,7 @@ function IgGrid({posts,selected,onSelect}){
     <div style={{background:SURF,borderRadius:12,padding:14,border:`1px solid ${BORDER}`}}>
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14,paddingBottom:12,borderBottom:`1px solid ${BORDER2}`}}>
         <div style={{width:36,height:36,borderRadius:"50%",background:SURF3,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontFamily:IN,fontWeight:700,color:TEAL}}>TR</div>
-        <div><div style={{fontFamily:IN,fontSize:13,fontWeight:700,color:TX1}}>tararosesalon</div><div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TX3}}>Premium hair · UAE</div></div>
+        <div><div style={{fontFamily:IN,fontSize:13,fontWeight:700,color:TX1}}>citygardenhotelmakati</div><div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TX3}}>Premium hair · UAE</div></div>
         <div style={{marginLeft:"auto",display:"flex",gap:4,alignItems:"center"}}>
           <span style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX4,marginRight:2}}>zoom</span>
           <button onClick={()=>setZoom(z=>Math.max(0,z-1))} disabled={zoom===0} title="Zoom out — smaller cells, see more" style={{width:26,height:26,borderRadius:6,border:`1px solid ${BORDER}`,background:zoom===0?SURF:SURF2,color:zoom===0?TX4:TX2,fontFamily:IN,fontSize:14,fontWeight:700,cursor:zoom===0?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>−</button>
@@ -1077,7 +1078,7 @@ function Login({onLogin}){
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100vh",background:BG}}>
       <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:16,padding:"36px 32px",width:"90%",maxWidth:340}}>
         <div style={{width:32,height:2,background:TEAL,borderRadius:1,marginBottom:14}}/>
-        <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:26,color:TX1,marginBottom:4}}>Tara Rose</div>
+        <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:26,color:TX1,marginBottom:4}}>City Garden Hotel Makati</div>
         <div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TEAL,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:28}}>Content System</div>
         <div style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TX3,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:6}}>Access code</div>
         <input type="password" value={code} onChange={e=>{setCode(e.target.value);setErr(false);}} onKeyDown={e=>e.key==="Enter"&&submit()}
@@ -1130,7 +1131,7 @@ export default function App(){
     <>
       <div style={{padding:"0 20px 24px",borderBottom:`1px solid ${BORDER2}`}}>
         <div style={{width:32,height:2,background:TEAL,borderRadius:1,marginBottom:12}}/>
-        <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>Tara Rose</div>
+        <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>CGHM</div>
         <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TEAL,letterSpacing:"0.12em",textTransform:"uppercase",marginTop:3}}>Content System</div>
         {signingIn?(
           <div style={{marginTop:12}}>
@@ -1183,7 +1184,7 @@ export default function App(){
       {isMob&&sideOpen&&<div style={{position:"fixed",inset:0,zIndex:100,display:"flex"}}>
         <div style={{width:240,background:SURF,borderRight:`1px solid ${BORDER}`,display:"flex",flexDirection:"column",padding:"24px 0",overflowY:"auto"}}>
           <div style={{padding:"0 20px 16px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>Tara Rose</div>
+            <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>CGHM</div>
             <button onClick={()=>setSideOpen(false)} style={{border:"none",background:"none",cursor:"pointer",color:TX3,fontSize:20,lineHeight:1,padding:0}}>×</button>
           </div>
           {sidebarContent}

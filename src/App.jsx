@@ -51,12 +51,29 @@ const GRID_ZOOM_WIDTHS = [42, 58, 74, 87, 100];
 const NAV_ITEMS = ["Feed Calendar","Stories","Analytics"];
 const RoleCtx=createContext("team");
 const useRole=()=>useContext(RoleCtx);
-// Set VITE_ADMIN_CODE / VITE_CLIENT_CODE / VITE_TEAM_CODE in Netlify env vars to change passcodes
+// Set VITE_ADMIN_CODE / VITE_CLIENT_CODE in Netlify env vars to change passcodes (guests use the "Continue as guest" button)
 const ROLE_CODES={
   [import.meta.env.VITE_ADMIN_CODE||"trs-admin"]:"admin",
   [import.meta.env.VITE_CLIENT_CODE||"trs-client"]:"client",
-  [import.meta.env.VITE_TEAM_CODE||"trs-team"]:"team",
 };
+
+const GUEST="__guest__";   // "Continue as guest" (view only, no code needed)
+const roleOf=a=>a===GUEST?"team":(a&&ROLE_CODES[a])||null;
+const ROLE_LABEL={admin:"Admin",client:"Client",team:"Guest"};
+// A private link like  /for-review/<code>  (or  ?key=<code>)  signs the visitor in automatically.
+function codeFromUrl(){
+  try{
+    const u=new URL(window.location.href);
+    const parts=u.pathname.split("/").filter(Boolean);
+    let key=u.searchParams.get("key");
+    if(!key&&parts[0]==="for-review"&&parts[1]) key=decodeURIComponent(parts[1]);
+    key=(key||"").trim();
+    return key&&ROLE_CODES[key]?key:null;
+  }catch(e){return null;}
+}
+function storedCode(){
+  try{const c=localStorage.getItem("cms_code");return roleOf(c)?c:null;}catch(e){return null;}
+}
 
 const PF="'Lora',Georgia,serif";
 const IN="'Poppins',-apple-system,BlinkMacSystemFont,sans-serif";
@@ -183,6 +200,12 @@ function UploadZone({files,onChange,multiple,accept,hint}){
   );
 }
 
+// Shows the first frame of a video (used when no thumbnail image was uploaded)
+function VideoFrame({src,style={}}){
+  const url=src&&src.indexOf("#")===-1?src+"#t=0.1":src;
+  return<video src={url} preload="metadata" muted playsInline disablePictureInPicture tabIndex={-1} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",pointerEvents:"none",background:"#111",...style}}/>;
+}
+
 // ── Media Preview ─────────────────────────────────────────────────
 
 function MediaPreview({files,format,thumbnail,clickToPlay,style={}}){
@@ -196,7 +219,7 @@ function MediaPreview({files,format,thumbnail,clickToPlay,style={}}){
     if(clickToPlay&&!playing){
       return(
         <div onClick={()=>setPlaying(true)} style={{width:"100%",height:"100%",position:"relative",cursor:"pointer",background:"#000",...style}}>
-          {thumb?<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<div style={{width:"100%",height:"100%",background:"#111"}}/>}
+          {thumb?<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<VideoFrame src={f.url}/>}
           <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
             <div style={{width:52,height:52,borderRadius:"50%",background:"rgba(0,0,0,0.6)",border:"2px solid rgba(255,255,255,0.6)",display:"flex",alignItems:"center",justifyContent:"center"}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M4 2l16 10L4 22V2z"/></svg>
@@ -228,11 +251,64 @@ function MediaPreview({files,format,thumbnail,clickToPlay,style={}}){
   return<img src={f.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover",...style}}/>;
 }
 
+// ── Frame picker: choose a thumbnail from the reel ────────────────
+function FramePicker({video,onPick}){
+  const ref=useRef();
+  const[dur,setDur]=useState(0);
+  const[t,setT]=useState(0);
+  const[err,setErr]=useState("");
+  const[done,setDone]=useState(false);
+  const src=video&&video.url;
+  useEffect(()=>{setDur(0);setT(0);setErr("");setDone(false);},[src]);
+  if(!src) return null;
+  const remote=src.startsWith("http");
+  const fmt=x=>{const m=Math.floor(x/60),sec=(x%60).toFixed(1);return`${m}:${sec.padStart(4,"0")}`;};
+  const seek=v=>{setT(v);setDone(false);setErr("");if(ref.current) ref.current.currentTime=v;};
+  const capture=async()=>{
+    const v=ref.current; if(!v) return;
+    setErr("");
+    try{
+      if(v.seeking) await new Promise(r=>v.addEventListener("seeked",r,{once:true}));
+      const w=v.videoWidth,h=v.videoHeight;
+      if(!w||!h) throw new Error("video not ready");
+      const k=Math.min(1,1080/Math.max(w,h));
+      const c=document.createElement("canvas");
+      c.width=Math.round(w*k); c.height=Math.round(h*k);
+      c.getContext("2d").drawImage(v,0,0,c.width,c.height);
+      const url=c.toDataURL("image/jpeg",0.88);
+      onPick({url,name:`thumbnail-${Date.now()}.jpg`});
+      setDone(true);
+    }catch(e){
+      setErr("Couldn't capture that frame. Please try again, or upload a thumbnail image instead.");
+    }
+  };
+  return(
+    <div style={{border:`1px solid ${BORDER}`,borderRadius:3,padding:12,background:SURF2,marginBottom:14}}>
+      <Label>Or pick a frame from the reel</Label>
+      <div style={{background:"#111",borderRadius:2,overflow:"hidden",display:"flex",justifyContent:"center"}}>
+        <video ref={ref} src={src} crossOrigin={remote?"anonymous":undefined} preload="metadata" muted playsInline
+          onLoadedMetadata={e=>{const d=e.currentTarget.duration;setDur(isFinite(d)?d:0);try{e.currentTarget.currentTime=0.1;setT(0.1);}catch(x){}}}
+          onError={()=>setErr("Couldn't load this video for frame picking. You can still upload a thumbnail image above.")}
+          style={{maxWidth:"100%",maxHeight:260,display:"block"}}/>
+      </div>
+      {dur>0&&<>
+        <input type="range" min={0} max={dur} step={0.05} value={t} onChange={e=>seek(Number(e.target.value))} style={{width:"100%",marginTop:10,accentColor:TEAL}} aria-label="Video position"/>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+          <span style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TX3}}>{fmt(t)} / {fmt(dur)}</span>
+          <button type="button" onClick={capture} style={{padding:"6px 14px",fontFamily:IN,fontSize:11,fontWeight:700,borderRadius:3,border:`1px solid ${TEAL}`,cursor:"pointer",background:`${TEAL}18`,color:TEAL,letterSpacing:"0.04em"}}>Use this frame as thumbnail</button>
+        </div>
+      </>}
+      {done&&<div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:"#3F6B2A",marginTop:8}}>✓ Thumbnail set. It's saved when you press save.</div>}
+      {err&&<div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:CORAL,marginTop:8}}>{err}</div>}
+    </div>
+  );
+}
+
 function MediaFields({draft,setDraft}){
   const fmt=draft.format;
   if(fmt==="Static"||fmt==="Testimonial"||fmt==="Story Reel") return<FRow label="Photo / image"><UploadZone files={draft.images||[]} onChange={f=>setDraft(d=>({...d,images:f}))} accept="image/*" hint="One image"/></FRow>;
   if(fmt==="Carousel") return<FRow label="Carousel images"><UploadZone multiple files={draft.images||[]} onChange={f=>setDraft(d=>({...d,images:f}))} accept="image/*" hint="Upload all slides"/></FRow>;
-  if(fmt==="Reel") return(<><FRow label="Reel video"><UploadZone files={draft.video||[]} onChange={f=>setDraft(d=>({...d,video:f}))} accept="video/*" hint="MP4 or MOV"/></FRow><FRow label="Thumbnail image"><UploadZone files={draft.images||[]} onChange={f=>setDraft(d=>({...d,images:f}))} accept="image/*" hint="One thumbnail"/></FRow></>);
+  if(fmt==="Reel") return(<><FRow label="Reel video"><UploadZone files={draft.video||[]} onChange={f=>setDraft(d=>({...d,video:f}))} accept="video/*" hint="MP4 or MOV"/></FRow><FRow label="Thumbnail image"><UploadZone files={draft.images||[]} onChange={f=>setDraft(d=>({...d,images:f}))} accept="image/*" hint="One thumbnail. If left empty, the first frame is used"/></FRow>{(draft.video||[]).length>0&&<FramePicker video={draft.video[0]} onPick={f=>setDraft(d=>({...d,images:[f]}))}/>}</>);
   return null;
 }
 
@@ -668,12 +744,13 @@ function IgGrid({posts,selected,onSelect}){
           const isDraft=p.status==="Draft";
           const thumb=(p.images||[])[0];
           const isVid=(p.video||[]).length>0;
+          const vidFile=(p.video||[])[0];
           const hasThumb=!!thumb;
           return(
             <div key={p.id} onClick={()=>onSelect(p.id)}
               style={{aspectRatio:"4/5",background:pl.bg,cursor:"pointer",overflow:"hidden",position:"relative",outline:selected===p.id?`2px solid ${TEAL}`:"2px solid transparent"}}>
-              {hasThumb&&<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover",position:"absolute",inset:0}}/>}
-              {!hasThumb&&(
+              {hasThumb?<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover",position:"absolute",inset:0}}/>:vidFile?<div style={{position:"absolute",inset:0}}><VideoFrame src={vidFile.url}/></div>:null}
+              {!hasThumb&&!vidFile&&(
                 <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",padding:"4px 6px",gap:2}}>
                   <div style={{fontFamily:IN,fontSize:9,fontWeight:700,color:pl.color,letterSpacing:"0.04em",textTransform:"uppercase",lineHeight:1.2}}>{p.format||"Post"}</div>
                   {p.subject?<div style={{fontFamily:IN,fontSize:8,fontWeight:600,color:pl.color,opacity:.85,lineHeight:1.3,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{p.subject}</div>:null}
@@ -728,7 +805,7 @@ function CalRow({p,selected,onSelect,onDelete,onDup}){
     <div onClick={()=>onSelect(p.id)} style={{display:"flex",gap:10,alignItems:"center",padding:"10px 12px",borderRadius:3,border:`1px solid ${selected===p.id?TEAL:BORDER}`,background:selected===p.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
       <div style={{width:38,height:38,borderRadius:3,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
         {thumb?(checkIsVideo(thumb)
-          ?<div style={{width:"100%",height:"100%",background:"#111",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M4 2l16 10L4 22V2z"/></svg></div>
+          ?<div style={{position:"relative",width:"100%",height:"100%",background:"#111"}}><VideoFrame src={thumb.url}/><svg width="10" height="10" viewBox="0 0 24 24" fill="white" style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",filter:"drop-shadow(0 0 2px rgba(0,0,0,.8))"}}><path d="M4 2l16 10L4 22V2z"/></svg></div>
           :<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>)
           :<div style={{width:"100%",height:"100%",background:pl.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:IN,fontSize:9,fontWeight:700,color:pl.color}}>{p.format?p.format[0]:""}</div>}
       </div>
@@ -752,7 +829,7 @@ function CalRow({p,selected,onSelect,onDelete,onDup}){
       <div style={{fontFamily:IN,fontSize:12,fontWeight:700,color:TX1}}>{p.day}</div>
       <div style={{width:38,height:38,borderRadius:3,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
         {thumb?(checkIsVideo(thumb)
-          ?<div style={{width:"100%",height:"100%",background:"#111",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M4 2l16 10L4 22V2z"/></svg></div>
+          ?<div style={{position:"relative",width:"100%",height:"100%",background:"#111"}}><VideoFrame src={thumb.url}/><svg width="10" height="10" viewBox="0 0 24 24" fill="white" style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",filter:"drop-shadow(0 0 2px rgba(0,0,0,.8))"}}><path d="M4 2l16 10L4 22V2z"/></svg></div>
           :<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>)
           :<div style={{width:"100%",height:"100%",background:pl.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:IN,fontSize:9,fontWeight:700,color:pl.color}}>{p.format?p.format[0]:""}</div>
         }
@@ -1074,7 +1151,7 @@ function StoriesTab({month,year}){
 function Login({onLogin}){
   const[code,setCode]=useState("");
   const[err,setErr]=useState(false);
-  const submit=()=>{const r=ROLE_CODES[code.trim()];if(r){onLogin(r);}else{setErr(true);setTimeout(()=>setErr(false),2500);}};
+  const submit=()=>{const c=code.trim();const r=ROLE_CODES[c];if(r){onLogin(c);}else{setErr(true);setTimeout(()=>setErr(false),2500);}};
   return(
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100vh",background:BG}}>
       <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:4,padding:"36px 32px",width:"90%",maxWidth:340}}>
@@ -1089,6 +1166,9 @@ function Login({onLogin}){
         {err&&<div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:CORAL,marginBottom:12}}>Incorrect access code.</div>}
         <button onClick={submit} style={{width:"100%",padding:"12px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:3,
           border:`1px solid ${TEAL}`,cursor:"pointer",background:TEAL,color:"#fff",textTransform:"uppercase",letterSpacing:"0.08em"}}>Enter</button>
+        <div style={{display:"flex",alignItems:"center",gap:10,margin:"16px 0"}}><div style={{flex:1,height:1,background:BORDER2}}/><span style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX4,letterSpacing:"0.08em",textTransform:"uppercase"}}>or</span><div style={{flex:1,height:1,background:BORDER2}}/></div>
+        <button onClick={()=>onLogin(GUEST)} style={{width:"100%",padding:"11px",fontFamily:IN,fontSize:12,fontWeight:600,borderRadius:3,border:`1px solid ${BORDER}`,cursor:"pointer",background:"transparent",color:TX2,letterSpacing:"0.04em"}}>Continue as guest</button>
+        <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX4,textAlign:"center",marginTop:8}}>View only</div>
       </div>
     </div>
   );
@@ -1121,12 +1201,19 @@ export default function App(){
   const[tab,setTab]=useState("Feed Calendar");
   const[sideOpen,setSideOpen]=useState(false);
   const isMob=useIsMobile();
-  const[role,setRole]=useState(()=>{const r=localStorage.getItem("cms_role");return["admin","client","team"].includes(r)?r:"team";});
-  const[signingIn,setSigningIn]=useState(false);
-  const[code,setCode]=useState("");
-  const[codeErr,setCodeErr]=useState(false);
-  const signOut=()=>{localStorage.removeItem("cms_role");setRole("team");setSigningIn(false);setCode("");};
-  const trySignIn=()=>{const r=ROLE_CODES[code.trim()];if(r){localStorage.setItem("cms_role",r);setRole(r);setCode("");setSigningIn(false);setCodeErr(false);}else{setCodeErr(true);setTimeout(()=>setCodeErr(false),2500);}};
+  const[access,setAccess]=useState(()=>{
+    const fromUrl=codeFromUrl();
+    if(fromUrl){
+      try{localStorage.setItem("cms_code",fromUrl);}catch(e){}
+      try{window.history.replaceState(null,"","/");}catch(e){}   // hide the private key from the address bar
+      return fromUrl;
+    }
+    return storedCode();
+  });
+  const role=roleOf(access);
+  const signIn=c=>{try{localStorage.setItem("cms_code",c);}catch(e){}setAccess(c);};
+  const signOut=()=>{try{localStorage.removeItem("cms_code");}catch(e){}setAccess(null);setSideOpen(false);};
+  if(!role) return<Login onLogin={signIn}/>;
 
   const sidebarContent=(
     <>
@@ -1134,27 +1221,10 @@ export default function App(){
         <div style={{width:32,height:2,background:TEAL,borderRadius:1,marginBottom:12}}/>
         <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>City Garden Hotel</div>
         <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TEAL,letterSpacing:"0.12em",textTransform:"uppercase",marginTop:3}}>Makati Content System</div>
-        {signingIn?(
-          <div style={{marginTop:12}}>
-            <input type="password" value={code} onChange={e=>{setCode(e.target.value);setCodeErr(false);}} onKeyDown={e=>e.key==="Enter"&&trySignIn()} autoFocus placeholder="Access code"
-              style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:12,padding:"7px 10px",borderRadius:3,border:`1px solid ${codeErr?CORAL:BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box",outline:"none"}}/>
-            {codeErr&&<div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:CORAL,marginTop:4}}>Incorrect code.</div>}
-            <div style={{display:"flex",gap:6,marginTop:8}}>
-              <button onClick={trySignIn} style={{flex:1,fontFamily:IN,fontSize:11,fontWeight:700,padding:"6px 0",borderRadius:3,border:`1px solid ${TEAL}`,background:TEAL,color:"#fff",cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.08em"}}>Enter</button>
-              <button onClick={()=>{setSigningIn(false);setCode("");setCodeErr(false);}} style={{fontFamily:IN,fontSize:11,fontWeight:700,padding:"6px 10px",borderRadius:3,border:`1px solid ${BORDER}`,background:"none",color:TX3,cursor:"pointer"}}>Cancel</button>
-            </div>
-          </div>
-        ):role!=="team"?(
-          <div style={{marginTop:12,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-            <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:3,padding:"3px 10px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{role}</span>
-            <button onClick={signOut} style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:2,cursor:"pointer",padding:"3px 10px",letterSpacing:"0.04em"}}>Sign out</button>
-          </div>
-        ):(
-          <div style={{marginTop:12,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-            <span style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX3,letterSpacing:"0.06em",textTransform:"uppercase"}}>Team view</span>
-            <button onClick={()=>setSigningIn(true)} style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TEAL,border:`1px solid ${TEAL}55`,background:`${TEAL}18`,borderRadius:2,cursor:"pointer",padding:"3px 10px",letterSpacing:"0.04em"}}>Sign in</button>
-          </div>
-        )}
+        <div style={{marginTop:12,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+          <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:3,padding:"3px 10px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{ROLE_LABEL[role]}</span>
+          <button onClick={signOut} style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:2,cursor:"pointer",padding:"3px 10px",letterSpacing:"0.04em"}}>{role==="team"?"Sign in":"Sign out"}</button>
+        </div>
       </div>
       <div style={{padding:"20px 12px 12px"}}>
         <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TX3,letterSpacing:"0.1em",textTransform:"uppercase",padding:"0 8px",marginBottom:8}}>Views</div>
@@ -1204,14 +1274,8 @@ export default function App(){
             <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX3}}>{month} {year}</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
-            {role!=="team"?(
-              <>
-                <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:3,padding:"3px 9px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{role}</span>
-                <button onClick={signOut} style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:2,cursor:"pointer",padding:"4px 10px"}}>Sign out</button>
-              </>
-            ):(
-              <button onClick={()=>{setSideOpen(true);setSigningIn(true);}} style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TEAL,border:`1px solid ${TEAL}55`,background:`${TEAL}18`,borderRadius:2,cursor:"pointer",padding:"4px 10px"}}>Sign in</button>
-            )}
+            <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:3,padding:"3px 9px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{ROLE_LABEL[role]}</span>
+            <button onClick={signOut} style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:2,cursor:"pointer",padding:"4px 10px"}}>{role==="team"?"Sign in":"Sign out"}</button>
           </div>
         </div>}
 

@@ -14,11 +14,11 @@ function useIsMobile(){
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const PILLARS = [
-  { name:"Rooms",           color:"#0F6E56", bg:"#99F6E4" },
-  { name:"Amenities",       color:"#3B6D11", bg:"#EEF3C7" },
-  { name:"Banquet",         color:"#534AB7", bg:"#C4B5FD" },
-  { name:"Encima Roofdeck", color:"#712B13", bg:"#FF9B9B" },
-  { name:"Bistro Buffet",   color:"#7A4B00", bg:"#FFD9A0" },
+  { name:"Rooms",           color:"#7A4E22", bg:"#F1DFC8" },
+  { name:"Amenities",       color:"#3F6B2A", bg:"#DCEAD0" },
+  { name:"Banquet",         color:"#5A2E4A", bg:"#EBD5E3" },
+  { name:"Encima Roofdeck", color:"#A23A31", bg:"#F7D7D2" },
+  { name:"Bistro Buffet",   color:"#7A560C", bg:"#F6E7B8" },
 ];
 const PILLAR_TARGETS = { "Rooms":30,"Amenities":10,"Banquet":20,"Encima Roofdeck":20,"Bistro Buffet":20 };
 const DAYS      = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
@@ -58,18 +58,20 @@ const ROLE_CODES={
   [import.meta.env.VITE_TEAM_CODE||"trs-team"]:"team",
 };
 
-const PF="'Playfair Display',Georgia,serif";
-const IN="'Inter',-apple-system,BlinkMacSystemFont,sans-serif";
-const TEAL="#99F6E4",GREEN="#EEF3C7",PURPLE="#C4B5FD",CORAL="#FF9B9B";
-const BG="#141414",SURF="#1E1E1E",SURF2="#252525",SURF3="#2E2E2E";
-const BORDER="#333333",BORDER2="#2A2A2A";
-const TX1="#F0EDE6",TX2="#B8B5AE",TX3="#6B6966",TX4="#3E3C3A";
+const PF="'Lora',Georgia,serif";
+const IN="'Poppins',-apple-system,BlinkMacSystemFont,sans-serif";
+// City Garden Hotel Makati palette. Names kept from the original so all styles keep working:
+// TEAL = primary accent (hotel tan-brown), GREEN = sage, PURPLE = navy, CORAL = alert red
+const TEAL="#9C6A3A",GREEN="#5C7A4A",PURPLE="#3A4A85",CORAL="#B4443C";
+const BG="#FBF7F0",SURF="#FFFFFF",SURF2="#FBF6EE",SURF3="#F3EADC";
+const BORDER="#E2D3BF",BORDER2="#EDE3D3";
+const TX1="#2B2520",TX2="#5A4F45",TX3="#7D6F60",TX4="#B3A697";
 const SS={
-  "Draft":       {bg:"#252520",color:"#A8A89A",border:"#3A3A30"},
-  "For Review":  {bg:"#0A2420",color:TEAL,    border:"#0F6E56"},
-  "Approved":    {bg:"#1A2408",color:GREEN,   border:"#3B6D11"},
-  "For Revision":{bg:"#2A0C08",color:CORAL,   border:"#712B13"},
-  "Uploaded":    {bg:"#1A1830",color:PURPLE,  border:"#534AB7"},
+  "Draft":       {bg:"#F1ECE4",color:"#6E6255",border:"#DDD2C2"},
+  "For Review":  {bg:"#E8ECF6",color:"#2F3E76",border:"#B7C1E0"},
+  "Approved":    {bg:"#E8F0E0",color:"#3F6B2A",border:"#B5D0A0"},
+  "For Revision":{bg:"#FBE9E6",color:"#A23A31",border:"#E8B4AE"},
+  "Uploaded":    {bg:"#F6EBD8",color:"#8A5A12",border:"#E1C48F"},
 };
 
 function getPillar(n){ return PILLARS.find(p=>p.name===n)||PILLARS[0]; }
@@ -143,13 +145,13 @@ async function uploadFiles(fileObjs){
 
 function Label({children}){return<div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX3,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:6}}>{children}</div>;}
 function SectionRule({color=CORAL}){return<div style={{width:40,height:2,background:color,borderRadius:1,marginBottom:14}}/>;}
-function HL({children,size=26}){return<div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:size,color:TX1,lineHeight:1.15}}>{children}</div>;}
-function Tag({label,bg,color}){return<span style={{display:"inline-block",fontFamily:IN,fontSize:10,fontWeight:600,padding:"3px 10px",borderRadius:20,background:bg,color:color,letterSpacing:"0.04em"}}>{label}</span>;}
-function StatusPill({status}){const s=getSS(status);return<span style={{display:"inline-block",fontFamily:IN,fontSize:10,fontWeight:600,padding:"3px 10px",borderRadius:20,background:s.bg,color:s.color,border:`1px solid ${s.border}`,letterSpacing:"0.04em"}}>{status}</span>;}
-function StatusDrop({value,onChange}){const s=getSS(value);return<div style={{position:"relative",display:"inline-block"}}><select value={value} onChange={e=>onChange(e.target.value)} style={{fontFamily:IN,fontSize:11,fontWeight:600,padding:"5px 26px 5px 10px",borderRadius:20,border:`1px solid ${s.border}`,background:s.bg,color:s.color,cursor:"pointer",appearance:"none"}}>{STATUSES.map(x=><option key={x}>{x}</option>)}</select><span style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",fontSize:8,color:s.color,pointerEvents:"none"}}>▼</span></div>;}
-function Inp({value,onChange,placeholder}){return<input value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder||""} style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:13,padding:"9px 12px",borderRadius:8,border:`1px solid ${BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box"}}/>;}
-function Sel({value,onChange,children}){return<select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:13,padding:"9px 10px",borderRadius:8,border:`1px solid ${BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box"}}>{children}</select>;}
-function Txt({value,onChange,rows,placeholder}){return<textarea value={value} onChange={e=>onChange(e.target.value)} rows={rows||4} placeholder={placeholder||""} style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:13,padding:"9px 12px",borderRadius:8,border:`1px solid ${BORDER}`,background:SURF2,color:TX1,resize:"vertical",lineHeight:1.7,boxSizing:"border-box"}}/>;}
+function HL({children,size=26}){return<div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:size,color:TX1,lineHeight:1.15}}>{children}</div>;}
+function Tag({label,bg,color}){return<span style={{display:"inline-block",fontFamily:IN,fontSize:10,fontWeight:600,padding:"3px 10px",borderRadius:3,background:bg,color:color,letterSpacing:"0.04em"}}>{label}</span>;}
+function StatusPill({status}){const s=getSS(status);return<span style={{display:"inline-block",fontFamily:IN,fontSize:10,fontWeight:600,padding:"3px 10px",borderRadius:3,background:s.bg,color:s.color,border:`1px solid ${s.border}`,letterSpacing:"0.04em"}}>{status}</span>;}
+function StatusDrop({value,onChange}){const s=getSS(value);return<div style={{position:"relative",display:"inline-block"}}><select value={value} onChange={e=>onChange(e.target.value)} style={{fontFamily:IN,fontSize:11,fontWeight:600,padding:"5px 26px 5px 10px",borderRadius:3,border:`1px solid ${s.border}`,background:s.bg,color:s.color,cursor:"pointer",appearance:"none"}}>{STATUSES.map(x=><option key={x}>{x}</option>)}</select><span style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",fontSize:8,color:s.color,pointerEvents:"none"}}>▼</span></div>;}
+function Inp({value,onChange,placeholder}){return<input value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder||""} style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:13,padding:"9px 12px",borderRadius:3,border:`1px solid ${BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box"}}/>;}
+function Sel({value,onChange,children}){return<select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:13,padding:"9px 10px",borderRadius:3,border:`1px solid ${BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box"}}>{children}</select>;}
+function Txt({value,onChange,rows,placeholder}){return<textarea value={value} onChange={e=>onChange(e.target.value)} rows={rows||4} placeholder={placeholder||""} style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:13,padding:"9px 12px",borderRadius:3,border:`1px solid ${BORDER}`,background:SURF2,color:TX1,resize:"vertical",lineHeight:1.7,boxSizing:"border-box"}}/>;}
 function FRow({label,children}){return<div style={{marginBottom:14}}><Label>{label}</Label>{children}</div>;}
 
 // ── Upload ────────────────────────────────────────────────────────
@@ -163,7 +165,7 @@ function UploadZone({files,onChange,multiple,accept,hint}){
   const rm=i=>onChange(files.filter((_,idx)=>idx!==i));
   return(
     <div>
-      <div onClick={()=>ref.current.click()} style={{border:`1.5px dashed ${BORDER}`,borderRadius:8,padding:"14px 12px",textAlign:"center",cursor:"pointer",background:SURF2}}>
+      <div onClick={()=>ref.current.click()} style={{border:`1.5px dashed ${BORDER}`,borderRadius:3,padding:"14px 12px",textAlign:"center",cursor:"pointer",background:SURF2}}>
         <div style={{fontFamily:IN,fontSize:12,fontWeight:600,color:TX3}}>Click to upload{multiple?" — multiple allowed":""}</div>
         {hint&&<div style={{fontFamily:IN,fontSize:11,color:TX4,marginTop:2}}>{hint}</div>}
       </div>
@@ -171,9 +173,9 @@ function UploadZone({files,onChange,multiple,accept,hint}){
       {files.length>0&&<div style={{display:"flex",gap:6,flexWrap:"wrap",marginTop:8}}>
         {files.map((f,i)=>(
           <div key={i} style={{position:"relative",width:58,height:58}}>
-            {checkIsVideo(f)?<div style={{width:58,height:58,borderRadius:6,border:`1px solid ${BORDER}`,background:"#111",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontFamily:IN,fontWeight:600,color:TX2}}>VIDEO</div>
-              :<img src={f.url} alt="" style={{width:58,height:58,objectFit:"cover",borderRadius:6,border:`1px solid ${BORDER}`}}/>}
-            <button onClick={()=>rm(i)} style={{position:"absolute",top:-5,right:-5,width:16,height:16,borderRadius:"50%",background:CORAL,border:"none",color:"#4A1B0C",fontSize:9,cursor:"pointer",fontWeight:700,padding:0,lineHeight:1}}>×</button>
+            {checkIsVideo(f)?<div style={{width:58,height:58,borderRadius:2,border:`1px solid ${BORDER}`,background:"#111",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontFamily:IN,fontWeight:600,color:TX2}}>VIDEO</div>
+              :<img src={f.url} alt="" style={{width:58,height:58,objectFit:"cover",borderRadius:2,border:`1px solid ${BORDER}`}}/>}
+            <button onClick={()=>rm(i)} style={{position:"absolute",top:-5,right:-5,width:16,height:16,borderRadius:"50%",background:CORAL,border:"none",color:"#fff",fontSize:9,cursor:"pointer",fontWeight:700,padding:0,lineHeight:1}}>×</button>
           </div>
         ))}
       </div>}
@@ -271,7 +273,7 @@ function ApprovalPanel({status,onChange}){
   const allActions=[{label:"For Review",s:"For Review"},{label:"Approve",s:"Approved"},{label:"For Revision",s:"For Revision"}];
   const actions=role==="admin"?allActions:role==="client"?allActions.filter(a=>a.s==="Approved"||a.s==="For Revision"):[];
   return(
-    <div style={{border:`1px solid ${s.border}`,borderRadius:10,overflow:"hidden",marginBottom:16}}>
+    <div style={{border:`1px solid ${s.border}`,borderRadius:3,overflow:"hidden",marginBottom:16}}>
       <div style={{padding:"10px 14px",background:s.bg,borderBottom:actions.length>0?`1px solid ${s.border}`:"none",display:"flex",alignItems:"center",gap:10}}>
         <div style={{width:7,height:7,borderRadius:"50%",background:s.color,flexShrink:0}}/>
         <div><Label>{status}</Label><div style={{fontFamily:IN,fontSize:12,fontWeight:600,color:s.color,marginTop:1}}>{msgs[status]}</div></div>
@@ -301,14 +303,14 @@ function Comments({comments,val,setVal,onAdd,onEdit,onDelete}){
           <div style={{flex:1}}>
             {editIdx===i?(
               <div>
-                <input value={editVal} onChange={e=>setEditVal(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")saveEdit();if(e.key==="Escape")cancelEdit();}} autoFocus style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:12,padding:"6px 10px",borderRadius:8,border:`1px solid ${TEAL}`,background:SURF2,color:TX1,boxSizing:"border-box",marginBottom:6}}/>
+                <input value={editVal} onChange={e=>setEditVal(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")saveEdit();if(e.key==="Escape")cancelEdit();}} autoFocus style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:12,padding:"6px 10px",borderRadius:3,border:`1px solid ${TEAL}`,background:SURF2,color:TX1,boxSizing:"border-box",marginBottom:6}}/>
                 <div style={{display:"flex",gap:6}}>
-                  <button onClick={saveEdit} style={{padding:"4px 12px",fontFamily:IN,fontSize:11,fontWeight:700,borderRadius:6,border:`1px solid ${TEAL}`,background:`${TEAL}18`,color:TEAL,cursor:"pointer"}}>Save</button>
-                  <button onClick={cancelEdit} style={{padding:"4px 12px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:6,border:`1px solid ${BORDER}`,background:SURF3,color:TX3,cursor:"pointer"}}>Cancel</button>
+                  <button onClick={saveEdit} style={{padding:"4px 12px",fontFamily:IN,fontSize:11,fontWeight:700,borderRadius:2,border:`1px solid ${TEAL}`,background:`${TEAL}18`,color:TEAL,cursor:"pointer"}}>Save</button>
+                  <button onClick={cancelEdit} style={{padding:"4px 12px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:2,border:`1px solid ${BORDER}`,background:SURF3,color:TX3,cursor:"pointer"}}>Cancel</button>
                 </div>
               </div>
             ):(
-              <div style={{fontSize:13,fontFamily:IN,fontWeight:600,color:TX2,background:SURF2,borderRadius:8,padding:"8px 12px",border:`1px solid ${BORDER}`,lineHeight:1.6}}>
+              <div style={{fontSize:13,fontFamily:IN,fontWeight:600,color:TX2,background:SURF2,borderRadius:3,padding:"8px 12px",border:`1px solid ${BORDER}`,lineHeight:1.6}}>
                 <div>{c}</div>
                 {(onEdit||onDelete)&&<div style={{display:"flex",gap:10,marginTop:5,borderTop:`1px solid ${BORDER2}`,paddingTop:5}}>
                   {onEdit&&<button onClick={()=>startEdit(i)} style={{border:"none",background:"none",cursor:"pointer",color:TX4,fontFamily:IN,fontSize:10,fontWeight:700,padding:0,letterSpacing:"0.04em"}}>EDIT</button>}
@@ -320,8 +322,8 @@ function Comments({comments,val,setVal,onAdd,onEdit,onDelete}){
         </div>
       ))}
       {onAdd&&<div style={{display:"flex",gap:8,marginTop:8}}>
-        <input value={val} onChange={e=>setVal(e.target.value)} onKeyDown={e=>e.key==="Enter"&&onAdd()} placeholder="Leave a comment..." style={{flex:1,fontFamily:IN,fontWeight:600,fontSize:13,padding:"8px 12px",borderRadius:8,border:`1px solid ${BORDER}`,background:SURF2,color:TX1}}/>
-        <button onClick={onAdd} style={{padding:"8px 16px",fontFamily:IN,fontSize:12,fontWeight:700,borderRadius:8,border:`1px solid ${BORDER}`,cursor:"pointer",background:SURF3,color:TX2}}>Post</button>
+        <input value={val} onChange={e=>setVal(e.target.value)} onKeyDown={e=>e.key==="Enter"&&onAdd()} placeholder="Leave a comment..." style={{flex:1,fontFamily:IN,fontWeight:600,fontSize:13,padding:"8px 12px",borderRadius:3,border:`1px solid ${BORDER}`,background:SURF2,color:TX1}}/>
+        <button onClick={onAdd} style={{padding:"8px 16px",fontFamily:IN,fontSize:12,fontWeight:700,borderRadius:3,border:`1px solid ${BORDER}`,cursor:"pointer",background:SURF3,color:TX2}}>Post</button>
       </div>}
     </div>
   );
@@ -338,11 +340,11 @@ function PillarTracker({items}){
         const target=PILLAR_TARGETS[p.name];
         const ok=Math.abs(actual-target)<=6;
         return(
-          <div key={p.name} style={{background:SURF,borderRadius:10,padding:14,border:`1px solid ${BORDER}`}}>
+          <div key={p.name} style={{background:SURF,borderRadius:3,padding:14,border:`1px solid ${BORDER}`}}>
             <Tag label={p.name} bg={p.bg} color={p.color}/>
-            <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:28,color:TX1,lineHeight:1,marginTop:10,marginBottom:8}}>{actual}%</div>
-            <div style={{height:2,background:SURF3,borderRadius:1}}><div style={{height:"100%",width:Math.min(actual,100)+"%",background:ok?p.bg:"#E24B4A",borderRadius:1}}/></div>
-            <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:ok?TX3:"#E24B4A",marginTop:5,letterSpacing:"0.04em"}}>target {target}%</div>
+            <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:28,color:TX1,lineHeight:1,marginTop:10,marginBottom:8}}>{actual}%</div>
+            <div style={{height:2,background:SURF3,borderRadius:1}}><div style={{height:"100%",width:Math.min(actual,100)+"%",background:ok?p.bg:"#B4443C",borderRadius:1}}/></div>
+            <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:ok?TX3:"#B4443C",marginTop:5,letterSpacing:"0.04em"}}>target {target}%</div>
           </div>
         );
       })}
@@ -353,13 +355,13 @@ function PillarTracker({items}){
 function Shell({title,rule,onCancel,onSave,saveLabel,saving,children}){
   const isMob=useIsMobile();
   return(
-    <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:12,padding:isMob?"16px 14px":"22px 24px",marginBottom:18}}>
+    <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:4,padding:isMob?"16px 14px":"22px 24px",marginBottom:18}}>
       <SectionRule color={rule||TEAL}/><HL size={18}>{title}</HL>
       <div style={{height:1,background:BORDER2,margin:"16px 0"}}/>
       {children}
       <div style={{display:"flex",gap:10,justifyContent:"flex-end",paddingTop:14,borderTop:`1px solid ${BORDER2}`,marginTop:4}}>
-        <button onClick={onCancel} style={{padding:"9px 20px",fontFamily:IN,fontSize:13,fontWeight:600,borderRadius:8,border:`1px solid ${BORDER}`,cursor:"pointer",background:"transparent",color:TX3}}>Cancel</button>
-        <button onClick={onSave} disabled={!!saving} style={{padding:"9px 22px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:8,border:`1px solid ${TEAL}`,cursor:"pointer",background:`${TEAL}22`,color:TEAL,opacity:saving?0.6:1}}>{saving?"Saving...":saveLabel}</button>
+        <button onClick={onCancel} style={{padding:"9px 20px",fontFamily:IN,fontSize:13,fontWeight:600,borderRadius:3,border:`1px solid ${BORDER}`,cursor:"pointer",background:"transparent",color:TX3}}>Cancel</button>
+        <button onClick={onSave} disabled={!!saving} style={{padding:"9px 22px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:3,border:`1px solid ${TEAL}`,cursor:"pointer",background:TEAL,color:"#fff",textTransform:"uppercase",letterSpacing:"0.08em",opacity:saving?0.6:1}}>{saving?"Saving...":saveLabel}</button>
       </div>
     </div>
   );
@@ -377,16 +379,16 @@ function ContentStats({items,label}){
     return{...p,count,actual,target,targetCount,diff};
   });
   return(
-    <div style={{marginBottom:14,border:`1px solid ${BORDER}`,borderLeft:`3px solid ${TEAL}`,borderRadius:10,padding:"14px 16px",background:SURF2}}>
+    <div style={{marginBottom:14,border:`1px solid ${BORDER}`,borderLeft:`3px solid ${TEAL}`,borderRadius:3,padding:"14px 16px",background:SURF2}}>
       {/* Status counts row */}
       <div style={{display:"flex",alignItems:"center",flexWrap:"wrap",gap:6,marginBottom:12}}>
         <span style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TEAL,letterSpacing:"0.1em",textTransform:"uppercase",marginRight:2}}>{label}</span>
-        <span style={{fontFamily:IN,fontSize:13,fontWeight:700,color:TX1,background:SURF3,borderRadius:20,padding:"4px 14px",border:`1px solid ${BORDER}`}}>{total} total</span>
+        <span style={{fontFamily:IN,fontSize:13,fontWeight:700,color:TX1,background:SURF3,borderRadius:3,padding:"4px 14px",border:`1px solid ${BORDER}`}}>{total} total</span>
         {STATUSES.map(s=>{
           const count=items.filter(x=>x.status===s).length;
           if(!count) return null;
           const ss=getSS(s);
-          return<span key={s} style={{fontFamily:IN,fontSize:13,fontWeight:700,color:ss.color,background:ss.bg,borderRadius:20,padding:"4px 14px",border:`1px solid ${ss.border}`}}>{count} {s}</span>;
+          return<span key={s} style={{fontFamily:IN,fontSize:13,fontWeight:700,color:ss.color,background:ss.bg,borderRadius:3,padding:"4px 14px",border:`1px solid ${ss.border}`}}>{count} {s}</span>;
         })}
       </div>
       {/* Pillar gap analysis */}
@@ -396,7 +398,7 @@ function ContentStats({items,label}){
             const needMore=p.diff<-1;
             const tooMany=p.diff>1;
             return(
-              <div key={p.name} style={{borderRadius:8,padding:"8px 10px",background:p.bg,border:`1.5px solid ${p.color}44`}}>
+              <div key={p.name} style={{borderRadius:3,padding:"8px 10px",background:p.bg,border:`1.5px solid ${p.color}44`}}>
                 <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:6}}>
                   <div style={{width:8,height:8,borderRadius:"50%",background:p.color,flexShrink:0}}/>
                   <span style={{fontFamily:IN,fontSize:10,fontWeight:700,color:p.color,overflow:"hidden",whiteSpace:"nowrap",textOverflow:"ellipsis"}}>{p.name}</span>
@@ -452,13 +454,12 @@ function PostForm({onAdd,onCancel,type,month,year}){
       </div>
       <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:10,marginBottom:4}}>
         <FRow label="Pillar"><Sel value={d.pillar} onChange={v=>u("pillar",v)}>{PILLARS.map(p=><option key={p.name}>{p.name}</option>)}</Sel></FRow>
-        <FRow label="Status"><select value={d.status} onChange={e=>u("status",e.target.value)} style={{width:"100%",fontFamily:IN,fontWeight:700,fontSize:13,padding:"9px 10px",borderRadius:8,border:`1px solid ${ss.border}`,background:ss.bg,color:ss.color,boxSizing:"border-box"}}>{STATUSES.map(x=><option key={x}>{x}</option>)}</select></FRow>
+        <FRow label="Status"><select value={d.status} onChange={e=>u("status",e.target.value)} style={{width:"100%",fontFamily:IN,fontWeight:700,fontSize:13,padding:"9px 10px",borderRadius:3,border:`1px solid ${ss.border}`,background:ss.bg,color:ss.color,boxSizing:"border-box"}}>{STATUSES.map(x=><option key={x}>{x}</option>)}</select></FRow>
       </div>
       {type==="feed"?(
-        <><FRow label="Subject *"><Inp value={d.subject} onChange={v=>u("subject",v)} placeholder="e.g. 
-        Room Rate Promos"/></FRow>
+        <><FRow label="Subject *"><Inp value={d.subject} onChange={v=>u("subject",v)} placeholder="e.g. Blonde reveal — mineral detox"/></FRow>
         <FRow label="Caption"><Txt value={d.caption} onChange={v=>u("caption",v)} rows={5} placeholder="Write the caption here..."/></FRow>
-        <FRow label="Hashtags"><Txt value={d.hashtags} onChange={v=>u("hashtags",v)} rows={2} placeholder="#CGHM #HotelsInMakati ..."/></FRow>
+        <FRow label="Hashtags"><Txt value={d.hashtags} onChange={v=>u("hashtags",v)} rows={2} placeholder="#CityGardenHotelMakati #MakatiStaycation ..."/></FRow>
         <MediaFields draft={d} setDraft={setD}/></>
       ):(
         <><FRow label="Frame descriptions (one per line)"><Txt value={d.frames} onChange={v=>u("frames",v)} rows={4} placeholder={"Frame 1: hook\nFrame 2: content\nFrame 3: CTA"}/></FRow>
@@ -502,7 +503,7 @@ function EditForm({post,onSave,onCancel,type}){
       </div>
       <div style={{display:"grid",gridTemplateColumns:isMob?"1fr":"1fr 1fr",gap:10,marginBottom:4}}>
         <FRow label="Pillar"><Sel value={d.pillar} onChange={v=>u("pillar",v)}>{PILLARS.map(p=><option key={p.name}>{p.name}</option>)}</Sel></FRow>
-        <FRow label="Status"><select value={d.status} onChange={e=>u("status",e.target.value)} style={{width:"100%",fontFamily:IN,fontWeight:700,fontSize:13,padding:"9px 10px",borderRadius:8,border:`1px solid ${ss.border}`,background:ss.bg,color:ss.color,boxSizing:"border-box"}}>{STATUSES.map(x=><option key={x}>{x}</option>)}</select></FRow>
+        <FRow label="Status"><select value={d.status} onChange={e=>u("status",e.target.value)} style={{width:"100%",fontFamily:IN,fontWeight:700,fontSize:13,padding:"9px 10px",borderRadius:3,border:`1px solid ${ss.border}`,background:ss.bg,color:ss.color,boxSizing:"border-box"}}>{STATUSES.map(x=><option key={x}>{x}</option>)}</select></FRow>
       </div>
       {type==="feed"?(
         <><FRow label="Subject"><Inp value={d.subject||""} onChange={v=>u("subject",v)}/></FRow>
@@ -532,14 +533,14 @@ function PostDetail({post,onClose,onStatus,onApproval,comment,setComment,onAddCo
   const hasMedia=hasVideo||hasImage;
   const mediaFiles=hasVideo?videoFiles:imgFiles;
   return(
-    <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:12,overflow:"hidden"}}>
+    <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:4,overflow:"hidden"}}>
       <div style={{padding:"14px 18px",borderBottom:`1px solid ${BORDER2}`,display:"flex",justifyContent:"space-between",alignItems:"center",background:SURF2}}>
         <div><SectionRule color={TEAL}/><HL size={15}>Post detail</HL></div>
         <button onClick={onClose} style={{fontSize:20,border:"none",background:"none",cursor:"pointer",color:TX3,lineHeight:1,fontFamily:IN}}>×</button>
       </div>
-      <div style={{margin:"14px 14px 0",border:`1px solid ${BORDER}`,borderRadius:10,overflow:"hidden"}}>
+      <div style={{margin:"14px 14px 0",border:`1px solid ${BORDER}`,borderRadius:3,overflow:"hidden"}}>
         <div style={{padding:"10px 12px",display:"flex",alignItems:"center",gap:8,borderBottom:`1px solid ${BORDER2}`,background:SURF2}}>
-          <div style={{width:28,height:28,borderRadius:"50%",background:SURF3,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontFamily:IN,fontWeight:700,color:TEAL}}>TR</div>
+          <div style={{width:28,height:28,borderRadius:"50%",background:SURF3,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontFamily:IN,fontWeight:700,color:TEAL}}>CG</div>
           <div style={{fontSize:13,fontFamily:IN,fontWeight:700,color:TX1}}>citygardenhotelmakati</div>
           {post.format==="Reel"&&<span style={{marginLeft:"auto",fontSize:9,fontFamily:IN,fontWeight:700,background:"#111",color:"#fff",padding:"2px 7px",borderRadius:4,letterSpacing:"0.06em"}}>REEL</span>}
           {post.format==="Carousel"&&imgFiles.length>1&&<span style={{marginLeft:"auto",fontSize:9,fontFamily:IN,fontWeight:700,background:"#111",color:"#fff",padding:"2px 7px",borderRadius:4}}>{imgFiles.length} slides</span>}
@@ -549,7 +550,7 @@ function PostDetail({post,onClose,onStatus,onApproval,comment,setComment,onAddCo
             ?<MediaPreview files={mediaFiles} format={post.format} thumbnail={hasVideo?imgFiles:[]} clickToPlay={hasVideo} style={{position:"absolute",inset:0}}/>
             :<div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:10,padding:20,background:pl.bg}}>
               <Tag label={post.format||"No format"} bg="rgba(0,0,0,0.1)" color={pl.color}/>
-              <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:18,color:pl.color,textAlign:"center",lineHeight:1.4}}>{post.subject||<span style={{opacity:.5,fontStyle:"italic"}}>No subject set</span>}</div>
+              <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:18,color:pl.color,textAlign:"center",lineHeight:1.4}}>{post.subject||<span style={{opacity:.5,fontStyle:"italic"}}>No subject set</span>}</div>
               <div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:pl.color,opacity:.7,textAlign:"center"}}>{post.day} · Week {post.week}</div>
             </div>
           }
@@ -564,7 +565,7 @@ function PostDetail({post,onClose,onStatus,onApproval,comment,setComment,onAddCo
         <ApprovalPanel status={post.status} onChange={onApproval}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
           {[["Pillar",null],["Status",null],["Format",post.format||"—"],["Scheduled",`${post.day} · W${post.week}`]].map(([l,v],i)=>(
-            <div key={l} style={{background:SURF2,borderRadius:8,padding:"10px 12px",border:`1px solid ${BORDER}`}}>
+            <div key={l} style={{background:SURF2,borderRadius:3,padding:"10px 12px",border:`1px solid ${BORDER}`}}>
               <Label>{l}</Label>
               {i===0&&<Tag label={post.pillar} bg={getPillar(post.pillar).bg} color={getPillar(post.pillar).color}/>}
               {i===1&&(isAdmin?<StatusDrop value={post.status} onChange={onStatus}/>:<StatusPill status={post.status}/>)}
@@ -573,8 +574,8 @@ function PostDetail({post,onClose,onStatus,onApproval,comment,setComment,onAddCo
           ))}
         </div>
         {isAdmin&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
-          <button onClick={onEdit} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:8,border:`1px solid ${BORDER}`,cursor:"pointer",background:SURF2,color:TX2}}>Edit post</button>
-          <button onClick={onDelete} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:8,border:`1px solid ${CORAL}55`,cursor:"pointer",background:`${CORAL}15`,color:CORAL}}>Delete</button>
+          <button onClick={onEdit} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:3,border:`1px solid ${BORDER}`,cursor:"pointer",background:SURF2,color:TX2}}>Edit post</button>
+          <button onClick={onDelete} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:3,border:`1px solid ${CORAL}55`,cursor:"pointer",background:`${CORAL}15`,color:CORAL}}>Delete</button>
         </div>}
         <Comments comments={post.comments} val={comment} setVal={setComment} onAdd={canComment?onAddComment:null} onEdit={canComment?onEditComment:null} onDelete={canComment?onDeleteComment:null}/>
       </div>
@@ -592,29 +593,29 @@ function StoryDetail({seq,onClose,onStatus,onApproval,comment,setComment,onAddCo
   const pl=getPillar(seq.pillar);
   const imgs=seq.images||[];
   return(
-    <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:12,overflow:"hidden"}}>
+    <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:4,overflow:"hidden"}}>
       <div style={{padding:"14px 18px",borderBottom:`1px solid ${BORDER2}`,display:"flex",justifyContent:"space-between",alignItems:"center",background:SURF2}}>
         <div><SectionRule color={PURPLE}/><HL size={15}>Story sequence</HL></div>
         <button onClick={onClose} style={{fontSize:20,border:"none",background:"none",cursor:"pointer",color:TX3,fontFamily:IN}}>×</button>
       </div>
       <div style={{padding:14}}>
-        <div style={{borderRadius:12,overflow:"hidden",marginBottom:14,border:`1px solid ${BORDER2}`,aspectRatio:"9/16",position:"relative",background:imgs.length>0?"#000":pl.bg}}>
+        <div style={{borderRadius:4,overflow:"hidden",marginBottom:14,border:`1px solid ${BORDER2}`,aspectRatio:"9/16",position:"relative",background:imgs.length>0?"#000":pl.bg}}>
           {imgs.length>0
             ?<StoryFrameViewer images={imgs}/>
             :<div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:8,padding:20,background:pl.bg}}>
               <div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:pl.color,letterSpacing:"0.06em",textTransform:"uppercase"}}>{seq.type}</div>
-              <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:14,color:pl.color,textAlign:"center",lineHeight:1.4,opacity:.7}}>No images uploaded yet</div>
+              <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:14,color:pl.color,textAlign:"center",lineHeight:1.4,opacity:.7}}>No images uploaded yet</div>
             </div>
           }
           <div style={{position:"absolute",top:0,left:0,right:0,padding:"12px 12px 0",pointerEvents:"none"}}>
             <div style={{display:"flex",alignItems:"center",gap:7,marginTop:imgs.length>1?24:0}}>
-              <div style={{width:24,height:24,borderRadius:"50%",background:"rgba(0,0,0,0.4)",border:"1px solid rgba(255,255,255,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontFamily:IN,fontWeight:700,color:"#fff"}}>TR</div>
+              <div style={{width:24,height:24,borderRadius:"50%",background:"rgba(0,0,0,0.4)",border:"1px solid rgba(255,255,255,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontFamily:IN,fontWeight:700,color:"#fff"}}>CG</div>
               <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.8)"}}>citygardenhotelmakati</div>
             </div>
           </div>
           <div style={{position:"absolute",bottom:16,left:14,right:14,display:"flex",flexDirection:"column",gap:6,pointerEvents:"none"}}>
             {(seq.frames||"").split("\n").filter(f=>f.trim()).map((f,i)=>(
-              <div key={i} style={{fontFamily:IN,fontSize:12,fontWeight:600,color:"#fff",textAlign:"center",lineHeight:1.5,background:"rgba(0,0,0,0.55)",borderRadius:8,padding:"7px 12px"}}>{f}</div>
+              <div key={i} style={{fontFamily:IN,fontSize:12,fontWeight:600,color:"#fff",textAlign:"center",lineHeight:1.5,background:"rgba(0,0,0,0.55)",borderRadius:3,padding:"7px 12px"}}>{f}</div>
             ))}
             {!(seq.frames||"").trim()&&<div style={{fontFamily:IN,fontSize:12,color:"rgba(255,255,255,0.3)",textAlign:"center",fontStyle:"italic"}}>No frames set yet</div>}
           </div>
@@ -622,19 +623,19 @@ function StoryDetail({seq,onClose,onStatus,onApproval,comment,setComment,onAddCo
         <ApprovalPanel status={seq.status} onChange={onApproval}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
           {[["Type",seq.type],["Pillar",seq.pillar],["Frames",String((seq.frames||"").split("\n").filter(f=>f.trim()).length)],["Scheduled",`${seq.day} · W${seq.week}`]].map(([l,v])=>(
-            <div key={l} style={{background:SURF2,borderRadius:8,padding:"10px 12px",border:`1px solid ${BORDER}`}}>
+            <div key={l} style={{background:SURF2,borderRadius:3,padding:"10px 12px",border:`1px solid ${BORDER}`}}>
               <Label>{l}</Label>
               <div style={{fontFamily:IN,fontSize:12,fontWeight:700,color:TX1}}>{v}</div>
             </div>
           ))}
         </div>
-        <div style={{background:SURF2,borderRadius:8,padding:"10px 12px",border:`1px solid ${BORDER}`,marginBottom:14}}>
+        <div style={{background:SURF2,borderRadius:3,padding:"10px 12px",border:`1px solid ${BORDER}`,marginBottom:14}}>
           <Label>Status</Label>
           {isAdmin?<StatusDrop value={seq.status} onChange={onStatus}/>:<StatusPill status={seq.status}/>}
         </div>
         {isAdmin&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
-          <button onClick={onEdit} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:8,border:`1px solid ${BORDER}`,cursor:"pointer",background:SURF2,color:TX2}}>Edit</button>
-          <button onClick={onDelete} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:8,border:`1px solid ${CORAL}55`,cursor:"pointer",background:`${CORAL}15`,color:CORAL}}>Delete</button>
+          <button onClick={onEdit} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:3,border:`1px solid ${BORDER}`,cursor:"pointer",background:SURF2,color:TX2}}>Edit</button>
+          <button onClick={onDelete} style={{padding:"10px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:3,border:`1px solid ${CORAL}55`,cursor:"pointer",background:`${CORAL}15`,color:CORAL}}>Delete</button>
         </div>}
         <Comments comments={seq.comments} val={comment} setVal={setComment} onAdd={canComment?onAddComment:null} onEdit={canComment?onEditComment:null} onDelete={canComment?onDeleteComment:null}/>
       </div>
@@ -649,15 +650,15 @@ function IgGrid({posts,selected,onSelect}){
   const gridPct=GRID_ZOOM_WIDTHS[zoom];
   const ordered=sortNewestFirst(posts);
   return(
-    <div style={{background:SURF,borderRadius:12,padding:14,border:`1px solid ${BORDER}`}}>
+    <div style={{background:SURF,borderRadius:4,padding:14,border:`1px solid ${BORDER}`}}>
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14,paddingBottom:12,borderBottom:`1px solid ${BORDER2}`}}>
-        <div style={{width:36,height:36,borderRadius:"50%",background:SURF3,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontFamily:IN,fontWeight:700,color:TEAL}}>TR</div>
-        <div><div style={{fontFamily:IN,fontSize:13,fontWeight:700,color:TX1}}>citygardenhotelmakati</div><div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TX3}}>Premium hair · UAE</div></div>
+        <div style={{width:36,height:36,borderRadius:"50%",background:SURF3,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontFamily:IN,fontWeight:700,color:TEAL}}>CG</div>
+        <div><div style={{fontFamily:IN,fontSize:13,fontWeight:700,color:TX1}}>citygardenhotelmakati</div><div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TX3}}>Hotel · Makati, Philippines</div></div>
         <div style={{marginLeft:"auto",display:"flex",gap:4,alignItems:"center"}}>
           <span style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX4,marginRight:2}}>zoom</span>
-          <button onClick={()=>setZoom(z=>Math.max(0,z-1))} disabled={zoom===0} title="Zoom out — smaller cells, see more" style={{width:26,height:26,borderRadius:6,border:`1px solid ${BORDER}`,background:zoom===0?SURF:SURF2,color:zoom===0?TX4:TX2,fontFamily:IN,fontSize:14,fontWeight:700,cursor:zoom===0?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>−</button>
+          <button onClick={()=>setZoom(z=>Math.max(0,z-1))} disabled={zoom===0} title="Zoom out — smaller cells, see more" style={{width:26,height:26,borderRadius:2,border:`1px solid ${BORDER}`,background:zoom===0?SURF:SURF2,color:zoom===0?TX4:TX2,fontFamily:IN,fontSize:14,fontWeight:700,cursor:zoom===0?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>−</button>
           <span style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX4,minWidth:18,textAlign:"center"}}>{zoom+1}</span>
-          <button onClick={()=>setZoom(z=>Math.min(4,z+1))} disabled={zoom===4} title="Zoom in — larger cells, see less" style={{width:26,height:26,borderRadius:6,border:`1px solid ${BORDER}`,background:zoom===4?SURF:SURF2,color:zoom===4?TX4:TX2,fontFamily:IN,fontSize:14,fontWeight:700,cursor:zoom===4?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>+</button>
+          <button onClick={()=>setZoom(z=>Math.min(4,z+1))} disabled={zoom===4} title="Zoom in — larger cells, see less" style={{width:26,height:26,borderRadius:2,border:`1px solid ${BORDER}`,background:zoom===4?SURF:SURF2,color:zoom===4?TX4:TX2,fontFamily:IN,fontSize:14,fontWeight:700,cursor:zoom===4?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>+</button>
         </div>
       </div>
       <div style={{width:`${gridPct}%`,margin:"0 auto",transition:"width 0.2s"}}>
@@ -704,15 +705,15 @@ function FilterBar({filter,setFilter,view,setView,onAdd}){
           {["All",...STATUSES].map(s=>{
             const ss=s==="All"?{bg:SURF2,color:TX3,border:BORDER}:getSS(s);
             const active=filter===s;
-            return<button key={s} onClick={()=>setFilter(s)} style={{padding:"5px 12px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:20,border:`1px solid ${active?ss.border:BORDER}`,cursor:"pointer",background:active?ss.bg:SURF,color:active?ss.color:TX3,letterSpacing:"0.03em"}}>{s}</button>;
+            return<button key={s} onClick={()=>setFilter(s)} style={{padding:"5px 12px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:3,border:`1px solid ${active?ss.border:BORDER}`,cursor:"pointer",background:active?ss.bg:SURF,color:active?ss.color:TX3,letterSpacing:"0.03em"}}>{s}</button>;
           })}
         </div>
       ):<div/>}
       <div style={{display:"flex",gap:8}}>
         {["calendar","grid"].map(v=>(
-          <button key={v} onClick={()=>setView(v)} style={{padding:"5px 14px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:20,border:`1px solid ${view===v?TEAL:BORDER}`,cursor:"pointer",background:view===v?`${TEAL}18`:SURF,color:view===v?TEAL:TX3,textTransform:"capitalize"}}>{v}</button>
+          <button key={v} onClick={()=>setView(v)} style={{padding:"5px 14px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:3,border:`1px solid ${view===v?TEAL:BORDER}`,cursor:"pointer",background:view===v?`${TEAL}18`:SURF,color:view===v?TEAL:TX3,textTransform:"capitalize"}}>{v}</button>
         ))}
-        {onAdd&&<button onClick={onAdd} style={{padding:"5px 16px",fontFamily:IN,fontSize:11,fontWeight:700,borderRadius:20,border:`1px solid ${TEAL}`,cursor:"pointer",background:`${TEAL}18`,color:TEAL,letterSpacing:"0.03em"}}>+ Add post</button>}
+        {onAdd&&<button onClick={onAdd} style={{padding:"5px 16px",fontFamily:IN,fontSize:11,fontWeight:700,borderRadius:3,border:`1px solid ${TEAL}`,cursor:"pointer",background:TEAL,color:"#fff",textTransform:"uppercase",letterSpacing:"0.08em"}}>+ Add post</button>}
       </div>
     </div>
   );
@@ -724,8 +725,8 @@ function CalRow({p,selected,onSelect,onDelete,onDup}){
   const pl=getPillar(p.pillar);
   const thumb=(p.images||[])[0]||(p.video||[])[0]||null;
   if(isMob) return(
-    <div onClick={()=>onSelect(p.id)} style={{display:"flex",gap:10,alignItems:"center",padding:"10px 12px",borderRadius:10,border:`1px solid ${selected===p.id?TEAL:BORDER}`,background:selected===p.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
-      <div style={{width:38,height:38,borderRadius:7,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
+    <div onClick={()=>onSelect(p.id)} style={{display:"flex",gap:10,alignItems:"center",padding:"10px 12px",borderRadius:3,border:`1px solid ${selected===p.id?TEAL:BORDER}`,background:selected===p.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
+      <div style={{width:38,height:38,borderRadius:3,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
         {thumb?(checkIsVideo(thumb)
           ?<div style={{width:"100%",height:"100%",background:"#111",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M4 2l16 10L4 22V2z"/></svg></div>
           :<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>)
@@ -747,9 +748,9 @@ function CalRow({p,selected,onSelect,onDelete,onDup}){
     </div>
   );
   return(
-    <div onClick={()=>onSelect(p.id)} style={{display:"grid",gridTemplateColumns:"44px 44px 100px 100px 1fr 70px 22px 22px",gap:8,alignItems:"center",padding:"10px 14px",borderRadius:10,border:`1px solid ${selected===p.id?TEAL:BORDER}`,background:selected===p.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
+    <div onClick={()=>onSelect(p.id)} style={{display:"grid",gridTemplateColumns:"44px 44px 100px 100px 1fr 70px 22px 22px",gap:8,alignItems:"center",padding:"10px 14px",borderRadius:3,border:`1px solid ${selected===p.id?TEAL:BORDER}`,background:selected===p.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
       <div style={{fontFamily:IN,fontSize:12,fontWeight:700,color:TX1}}>{p.day}</div>
-      <div style={{width:38,height:38,borderRadius:7,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
+      <div style={{width:38,height:38,borderRadius:3,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
         {thumb?(checkIsVideo(thumb)
           ?<div style={{width:"100%",height:"100%",background:"#111",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M4 2l16 10L4 22V2z"/></svg></div>
           :<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>)
@@ -844,9 +845,9 @@ function FeedTab({month,year}){
       {editing&&edP&&<div ref={editFormRef}><EditForm post={edP} type="feed" onSave={upd} onCancel={()=>setEditing(null)}/></div>}
       {loading&&<div style={{textAlign:"center",padding:"60px 20px",fontFamily:IN,fontSize:13,fontWeight:600,color:TX3}}>Loading...</div>}
       {!loading&&posts.length===0&&!adding&&(
-        <div style={{textAlign:"center",padding:"70px 20px",border:`1px dashed ${BORDER}`,borderRadius:12}}>
+        <div style={{textAlign:"center",padding:"70px 20px",border:`1px dashed ${BORDER}`,borderRadius:4}}>
           <SectionRule color={TX4}/>
-          <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:22,color:TX3,marginBottom:8}}>Nothing here yet</div>
+          <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:22,color:TX3,marginBottom:8}}>Nothing here yet</div>
           <div style={{fontFamily:IN,fontSize:13,fontWeight:600,color:TX4}}>No posts for {month}. Click + Add post to begin.</div>
         </div>
       )}
@@ -874,7 +875,7 @@ function FeedTab({month,year}){
                 <div key={w} style={{marginBottom:20}}>
                   <div onClick={()=>toggleWeek(w)} style={{display:"flex",alignItems:"center",gap:10,marginBottom:collapsed?0:10,paddingBottom:8,borderBottom:`1px solid ${BORDER2}`,cursor:"pointer",userSelect:"none"}}>
                     <div style={{width:3,height:14,background:TEAL,borderRadius:2,flexShrink:0}}/>
-                    <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:16,color:TX2}}>Week {w}</div>
+                    <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:16,color:TX2}}>Week {w}</div>
                     <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX3}}>{month.slice(0,3)} {getWeekDateRange(month,w,year)}</div>
                     <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX4}}>{wp.length} post{wp.length!==1?"s":""}</div>
                     <div style={{marginLeft:"auto",fontFamily:IN,fontSize:11,color:TX4}}>{collapsed?"▶":"▼"}</div>
@@ -887,7 +888,7 @@ function FeedTab({month,year}){
             })
           ):<IgGrid posts={posts} selected={selected} onSelect={id=>{setSelected(selected===id?null:id);setEditing(null);}}/>}
         </div>
-        {sel&&!editing&&<div ref={detailRef} style={{alignSelf:"stretch"}}><div style={{position:"sticky",top:16,borderRadius:12}}><PostDetail post={sel} onClose={()=>setSelected(null)} onStatus={s=>setSt(sel.id,s)} onApproval={s=>setSt(sel.id,s)} comment={comment} setComment={setComment} onAddComment={()=>addC(sel.id)} onEdit={()=>{setEditing(sel.id);setSelected(null);}} onDelete={()=>del(sel.id)} onEditComment={(idx,text)=>editComment(sel.id,idx,text)} onDeleteComment={idx=>delComment(sel.id,idx)}/></div></div>}
+        {sel&&!editing&&<div ref={detailRef} style={{alignSelf:"stretch"}}><div style={{position:"sticky",top:16,borderRadius:4}}><PostDetail post={sel} onClose={()=>setSelected(null)} onStatus={s=>setSt(sel.id,s)} onApproval={s=>setSt(sel.id,s)} comment={comment} setComment={setComment} onAddComment={()=>addC(sel.id)} onEdit={()=>{setEditing(sel.id);setSelected(null);}} onDelete={()=>del(sel.id)} onEditComment={(idx,text)=>editComment(sel.id,idx,text)} onDeleteComment={idx=>delComment(sel.id,idx)}/></div></div>}
       </div>
     </div>
   );
@@ -967,19 +968,19 @@ function StoriesTab({month,year}){
           {["All",...STATUSES].map(s=>{
             const ss=s==="All"?{bg:SURF2,color:TX3,border:BORDER}:getSS(s);
             const active=filter===s;
-            return<button key={s} onClick={()=>setFilter(s)} style={{padding:"5px 12px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:20,border:`1px solid ${active?ss.border:BORDER}`,cursor:"pointer",background:active?ss.bg:SURF,color:active?ss.color:TX3,letterSpacing:"0.03em"}}>{s}</button>;
+            return<button key={s} onClick={()=>setFilter(s)} style={{padding:"5px 12px",fontFamily:IN,fontSize:11,fontWeight:600,borderRadius:3,border:`1px solid ${active?ss.border:BORDER}`,cursor:"pointer",background:active?ss.bg:SURF,color:active?ss.color:TX3,letterSpacing:"0.03em"}}>{s}</button>;
           })}
         </div>
-        {isAdmin&&<button onClick={()=>{setAdding(true);setSelected(null);setEditing(null);}} style={{padding:"5px 16px",fontFamily:IN,fontSize:11,fontWeight:700,borderRadius:20,border:`1px solid ${TEAL}`,cursor:"pointer",background:`${TEAL}18`,color:TEAL,letterSpacing:"0.03em"}}>+ Add sequence</button>}
+        {isAdmin&&<button onClick={()=>{setAdding(true);setSelected(null);setEditing(null);}} style={{padding:"5px 16px",fontFamily:IN,fontSize:11,fontWeight:700,borderRadius:3,border:`1px solid ${TEAL}`,cursor:"pointer",background:`${TEAL}18`,color:TEAL,letterSpacing:"0.03em"}}>+ Add sequence</button>}
       </div>
       {toast&&<Toast msg={toast.msg} type={toast.type} onDone={()=>setToast(null)}/>}
       {adding&&<PostForm type="story" onAdd={add} onCancel={()=>setAdding(false)} month={month} year={year}/>}
       {editing&&edS&&<div ref={editFormRef}><EditForm post={edS} type="story" onSave={upd} onCancel={()=>setEditing(null)}/></div>}
       {loading&&<div style={{textAlign:"center",padding:"60px 20px",fontFamily:IN,fontSize:13,fontWeight:600,color:TX3}}>Loading...</div>}
       {!loading&&seqs.length===0&&!adding&&(
-        <div style={{textAlign:"center",padding:"70px 20px",border:`1px dashed ${BORDER}`,borderRadius:12}}>
+        <div style={{textAlign:"center",padding:"70px 20px",border:`1px dashed ${BORDER}`,borderRadius:4}}>
           <SectionRule color={TX4}/>
-          <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:22,color:TX3,marginBottom:8}}>Nothing here yet</div>
+          <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:22,color:TX3,marginBottom:8}}>Nothing here yet</div>
           <div style={{fontFamily:IN,fontSize:13,fontWeight:600,color:TX4}}>No sequences for {month}. Click + Add sequence to begin.</div>
         </div>
       )}
@@ -1006,7 +1007,7 @@ function StoriesTab({month,year}){
               <div key={w} style={{marginBottom:20}}>
                 <div onClick={()=>toggleWeek(w)} style={{display:"flex",alignItems:"center",gap:10,marginBottom:collapsed?0:10,paddingBottom:8,borderBottom:`1px solid ${BORDER2}`,cursor:"pointer",userSelect:"none"}}>
                   <div style={{width:3,height:14,background:PURPLE,borderRadius:2,flexShrink:0}}/>
-                  <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:16,color:TX2}}>Week {w}</div>
+                  <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:16,color:TX2}}>Week {w}</div>
                   <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX3}}>{month.slice(0,3)} {getWeekDateRange(month,w,year)}</div>
                   <div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX4}}>{wp.length} sequence{wp.length!==1?"s":""}</div>
                   <div style={{marginLeft:"auto",fontFamily:IN,fontSize:11,color:TX4}}>{collapsed?"▶":"▼"}</div>
@@ -1018,8 +1019,8 @@ function StoriesTab({month,year}){
                     const isRepost=s.type==="Repost from feed";
                     if(isMob) return(
                       <div key={s.id} onClick={()=>{setSelected(selected===s.id?null:s.id);setEditing(null);}}
-                        style={{display:"flex",gap:10,alignItems:"center",padding:"10px 12px",borderRadius:10,border:`1px solid ${selected===s.id?TEAL:BORDER}`,background:selected===s.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
-                        <div style={{width:38,height:38,borderRadius:7,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
+                        style={{display:"flex",gap:10,alignItems:"center",padding:"10px 12px",borderRadius:3,border:`1px solid ${selected===s.id?TEAL:BORDER}`,background:selected===s.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
+                        <div style={{width:38,height:38,borderRadius:3,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
                           {thumb?<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                             :<div style={{width:"100%",height:"100%",background:pl.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:IN,fontSize:9,fontWeight:700,color:pl.color}}>S</div>}
                         </div>
@@ -1040,16 +1041,16 @@ function StoriesTab({month,year}){
                     );
                     return(
                       <div key={s.id} onClick={()=>{setSelected(selected===s.id?null:s.id);setEditing(null);}}
-                        style={{display:"grid",gridTemplateColumns:"44px 44px 100px 100px 1fr 62px 22px 22px",gap:8,alignItems:"center",padding:"10px 14px",borderRadius:10,border:`1px solid ${selected===s.id?TEAL:BORDER}`,background:selected===s.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
+                        style={{display:"grid",gridTemplateColumns:"44px 44px 100px 100px 1fr 62px 22px 22px",gap:8,alignItems:"center",padding:"10px 14px",borderRadius:3,border:`1px solid ${selected===s.id?TEAL:BORDER}`,background:selected===s.id?`${TEAL}0D`:SURF,cursor:"pointer"}}>
                         <div style={{fontFamily:IN,fontSize:12,fontWeight:700,color:TX1}}>{s.day}</div>
-                        <div style={{width:38,height:38,borderRadius:7,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
+                        <div style={{width:38,height:38,borderRadius:3,overflow:"hidden",background:pl.bg,border:`1px solid ${BORDER}`,flexShrink:0}}>
                           {thumb?<img src={thumb.url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                             :<div style={{width:"100%",height:"100%",background:pl.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:IN,fontSize:9,fontWeight:700,color:pl.color}}>S</div>}
                         </div>
                         <StatusPill status={s.status}/>
                         <Tag label={s.pillar} bg={pl.bg} color={pl.color}/>
                         <div style={{fontFamily:IN,fontSize:12,fontWeight:600,color:TX2,overflow:"hidden",whiteSpace:"nowrap",textOverflow:"ellipsis"}}>{(s.frames||"").split("\n")[0]||<span style={{color:TX4,fontStyle:"italic"}}>No frames</span>}</div>
-                        <span style={{fontFamily:IN,fontSize:10,fontWeight:600,padding:"3px 8px",borderRadius:20,background:isRepost?SURF3:`${GREEN}22`,color:isRepost?TX3:"#A8D672",border:`1px solid ${isRepost?BORDER:"#639922"}`}}>{isRepost?"repost":"unique"}</span>
+                        <span style={{fontFamily:IN,fontSize:10,fontWeight:600,padding:"3px 8px",borderRadius:3,background:isRepost?SURF3:`${GREEN}22`,color:isRepost?TX3:"#3F6B2A",border:`1px solid ${isRepost?BORDER:"#B5D0A0"}`}}>{isRepost?"repost":"unique"}</span>
                         {isAdmin?<button onClick={e=>{e.stopPropagation();dup(s.id);}} title="Duplicate" style={{border:"none",background:"none",cursor:"pointer",color:TX4,padding:0,lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center"}}>
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                         </button>:<div/>}
@@ -1062,7 +1063,7 @@ function StoriesTab({month,year}){
             );
           })}
         </div>
-        {sel&&!editing&&<div ref={detailRef} style={{alignSelf:"stretch"}}><div style={{position:"sticky",top:16,borderRadius:12}}><StoryDetail seq={sel} onClose={()=>setSelected(null)} onStatus={s=>setSt(sel.id,s)} onApproval={s=>setSt(sel.id,s)} comment={comment} setComment={setComment} onAddComment={()=>addC(sel.id)} onEdit={()=>{setEditing(sel.id);setSelected(null);}} onDelete={()=>del(sel.id)} onEditComment={(idx,text)=>editComment(sel.id,idx,text)} onDeleteComment={idx=>delComment(sel.id,idx)}/></div></div>}
+        {sel&&!editing&&<div ref={detailRef} style={{alignSelf:"stretch"}}><div style={{position:"sticky",top:16,borderRadius:4}}><StoryDetail seq={sel} onClose={()=>setSelected(null)} onStatus={s=>setSt(sel.id,s)} onApproval={s=>setSt(sel.id,s)} comment={comment} setComment={setComment} onAddComment={()=>addC(sel.id)} onEdit={()=>{setEditing(sel.id);setSelected(null);}} onDelete={()=>del(sel.id)} onEditComment={(idx,text)=>editComment(sel.id,idx,text)} onDeleteComment={idx=>delComment(sel.id,idx)}/></div></div>}
       </div>
     </div>
   );
@@ -1076,18 +1077,18 @@ function Login({onLogin}){
   const submit=()=>{const r=ROLE_CODES[code.trim()];if(r){onLogin(r);}else{setErr(true);setTimeout(()=>setErr(false),2500);}};
   return(
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100vh",background:BG}}>
-      <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:16,padding:"36px 32px",width:"90%",maxWidth:340}}>
+      <div style={{background:SURF,border:`1px solid ${BORDER}`,borderRadius:4,padding:"36px 32px",width:"90%",maxWidth:340}}>
         <div style={{width:32,height:2,background:TEAL,borderRadius:1,marginBottom:14}}/>
-        <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:26,color:TX1,marginBottom:4}}>City Garden Hotel Makati</div>
-        <div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TEAL,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:28}}>Content System</div>
+        <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:26,color:TX1,marginBottom:4}}>City Garden Hotel</div>
+        <div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:TEAL,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:28}}>Makati Content System</div>
         <div style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TX3,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:6}}>Access code</div>
         <input type="password" value={code} onChange={e=>{setCode(e.target.value);setErr(false);}} onKeyDown={e=>e.key==="Enter"&&submit()}
           placeholder="Enter your access code" autoFocus
-          style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:14,padding:"10px 14px",borderRadius:10,
+          style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:14,padding:"10px 14px",borderRadius:3,
             border:`1px solid ${err?CORAL:BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box",marginBottom:err?6:16,outline:"none"}}/>
         {err&&<div style={{fontFamily:IN,fontSize:11,fontWeight:600,color:CORAL,marginBottom:12}}>Incorrect access code.</div>}
-        <button onClick={submit} style={{width:"100%",padding:"12px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:10,
-          border:`1px solid ${TEAL}`,cursor:"pointer",background:`${TEAL}22`,color:TEAL}}>Enter</button>
+        <button onClick={submit} style={{width:"100%",padding:"12px",fontFamily:IN,fontSize:13,fontWeight:700,borderRadius:3,
+          border:`1px solid ${TEAL}`,cursor:"pointer",background:TEAL,color:"#fff",textTransform:"uppercase",letterSpacing:"0.08em"}}>Enter</button>
       </div>
     </div>
   );
@@ -1097,16 +1098,16 @@ function Login({onLogin}){
 function Toast({msg,type,onDone}){
   useEffect(()=>{const t=setTimeout(onDone,2800);return()=>clearTimeout(t);},[]);
   const styles={
-    success:{bg:"#0A2420",color:TEAL,   border:"#0F6E56"},
-    error:  {bg:"#2A0C08",color:CORAL,  border:"#712B13"},
-    warn:   {bg:"#1A1408",color:"#FFD580",border:"#8B6914"},
+    success:{bg:"#EEF4E8",color:"#3F6B2A",border:"#B5D0A0"},
+    error:  {bg:"#FBE9E6",color:"#A23A31",border:"#E8B4AE"},
+    warn:   {bg:"#FBF1DC",color:"#8A5A12",border:"#E1C48F"},
   };
   const st=styles[type]||styles.success;
   return(
     <div style={{position:"fixed",top:20,left:"50%",transform:"translateX(-50%)",zIndex:9999,
       background:st.bg,border:`1px solid ${st.border}`,color:st.color,
-      fontFamily:IN,fontSize:13,fontWeight:700,padding:"10px 22px",borderRadius:10,
-      boxShadow:"0 4px 24px rgba(0,0,0,0.6)",pointerEvents:"none",whiteSpace:"nowrap",letterSpacing:"0.02em"}}>
+      fontFamily:IN,fontSize:13,fontWeight:700,padding:"10px 22px",borderRadius:3,
+      boxShadow:"0 4px 24px rgba(60,40,20,0.18)",pointerEvents:"none",whiteSpace:"nowrap",letterSpacing:"0.02em"}}>
       {msg}
     </div>
   );
@@ -1131,43 +1132,43 @@ export default function App(){
     <>
       <div style={{padding:"0 20px 24px",borderBottom:`1px solid ${BORDER2}`}}>
         <div style={{width:32,height:2,background:TEAL,borderRadius:1,marginBottom:12}}/>
-        <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>CGHM</div>
-        <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TEAL,letterSpacing:"0.12em",textTransform:"uppercase",marginTop:3}}>Content System</div>
+        <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>City Garden Hotel</div>
+        <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TEAL,letterSpacing:"0.12em",textTransform:"uppercase",marginTop:3}}>Makati Content System</div>
         {signingIn?(
           <div style={{marginTop:12}}>
             <input type="password" value={code} onChange={e=>{setCode(e.target.value);setCodeErr(false);}} onKeyDown={e=>e.key==="Enter"&&trySignIn()} autoFocus placeholder="Access code"
-              style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:12,padding:"7px 10px",borderRadius:8,border:`1px solid ${codeErr?CORAL:BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box",outline:"none"}}/>
+              style={{width:"100%",fontFamily:IN,fontWeight:600,fontSize:12,padding:"7px 10px",borderRadius:3,border:`1px solid ${codeErr?CORAL:BORDER}`,background:SURF2,color:TX1,boxSizing:"border-box",outline:"none"}}/>
             {codeErr&&<div style={{fontFamily:IN,fontSize:10,fontWeight:600,color:CORAL,marginTop:4}}>Incorrect code.</div>}
             <div style={{display:"flex",gap:6,marginTop:8}}>
-              <button onClick={trySignIn} style={{flex:1,fontFamily:IN,fontSize:11,fontWeight:700,padding:"6px 0",borderRadius:8,border:`1px solid ${TEAL}`,background:`${TEAL}18`,color:TEAL,cursor:"pointer"}}>Enter</button>
-              <button onClick={()=>{setSigningIn(false);setCode("");setCodeErr(false);}} style={{fontFamily:IN,fontSize:11,fontWeight:700,padding:"6px 10px",borderRadius:8,border:`1px solid ${BORDER}`,background:"none",color:TX3,cursor:"pointer"}}>Cancel</button>
+              <button onClick={trySignIn} style={{flex:1,fontFamily:IN,fontSize:11,fontWeight:700,padding:"6px 0",borderRadius:3,border:`1px solid ${TEAL}`,background:TEAL,color:"#fff",cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.08em"}}>Enter</button>
+              <button onClick={()=>{setSigningIn(false);setCode("");setCodeErr(false);}} style={{fontFamily:IN,fontSize:11,fontWeight:700,padding:"6px 10px",borderRadius:3,border:`1px solid ${BORDER}`,background:"none",color:TX3,cursor:"pointer"}}>Cancel</button>
             </div>
           </div>
         ):role!=="team"?(
           <div style={{marginTop:12,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-            <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:20,padding:"3px 10px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{role}</span>
-            <button onClick={signOut} style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:6,cursor:"pointer",padding:"3px 10px",letterSpacing:"0.04em"}}>Sign out</button>
+            <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:3,padding:"3px 10px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{role}</span>
+            <button onClick={signOut} style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:2,cursor:"pointer",padding:"3px 10px",letterSpacing:"0.04em"}}>Sign out</button>
           </div>
         ):(
           <div style={{marginTop:12,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
             <span style={{fontFamily:IN,fontSize:10,fontWeight:600,color:TX3,letterSpacing:"0.06em",textTransform:"uppercase"}}>Team view</span>
-            <button onClick={()=>setSigningIn(true)} style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TEAL,border:`1px solid ${TEAL}55`,background:`${TEAL}18`,borderRadius:6,cursor:"pointer",padding:"3px 10px",letterSpacing:"0.04em"}}>Sign in</button>
+            <button onClick={()=>setSigningIn(true)} style={{fontFamily:IN,fontSize:10,fontWeight:700,color:TEAL,border:`1px solid ${TEAL}55`,background:`${TEAL}18`,borderRadius:2,cursor:"pointer",padding:"3px 10px",letterSpacing:"0.04em"}}>Sign in</button>
           </div>
         )}
       </div>
       <div style={{padding:"20px 12px 12px"}}>
         <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TX3,letterSpacing:"0.1em",textTransform:"uppercase",padding:"0 8px",marginBottom:8}}>Views</div>
-        {NAV_ITEMS.map(item=>{const active=tab===item;return<button key={item} onClick={()=>{setTab(item);setSideOpen(false);}} style={{width:"100%",display:"block",textAlign:"left",padding:"9px 12px",borderRadius:8,border:"none",cursor:"pointer",background:active?`${TEAL}18`:"transparent",color:active?TEAL:TX2,fontFamily:IN,fontSize:13,fontWeight:active?700:600,marginBottom:2}}>{item}</button>;})}
+        {NAV_ITEMS.map(item=>{const active=tab===item;return<button key={item} onClick={()=>{setTab(item);setSideOpen(false);}} style={{width:"100%",display:"block",textAlign:"left",padding:"9px 12px",borderRadius:3,border:"none",cursor:"pointer",background:active?`${TEAL}18`:"transparent",color:active?TEAL:TX2,fontFamily:IN,fontSize:13,fontWeight:active?700:600,marginBottom:2}}>{item}</button>;})}
       </div>
       <div style={{padding:"8px 12px"}}>
         <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TX3,letterSpacing:"0.1em",textTransform:"uppercase",padding:"0 8px",marginBottom:8}}>Year</div>
         <div style={{display:"flex",alignItems:"center",gap:6,padding:"0 8px",marginBottom:12}}>
-          <button onClick={()=>setYear(y=>y-1)} style={{border:`1px solid ${BORDER}`,background:SURF3,color:TX2,borderRadius:6,cursor:"pointer",fontFamily:IN,fontSize:14,fontWeight:700,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center"}}>←</button>
+          <button onClick={()=>setYear(y=>y-1)} style={{border:`1px solid ${BORDER}`,background:SURF3,color:TX2,borderRadius:2,cursor:"pointer",fontFamily:IN,fontSize:14,fontWeight:700,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center"}}>←</button>
           <span style={{fontFamily:IN,fontSize:13,fontWeight:700,color:TX1,flex:1,textAlign:"center"}}>{year}</span>
-          <button onClick={()=>setYear(y=>y+1)} style={{border:`1px solid ${BORDER}`,background:SURF3,color:TX2,borderRadius:6,cursor:"pointer",fontFamily:IN,fontSize:14,fontWeight:700,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center"}}>→</button>
+          <button onClick={()=>setYear(y=>y+1)} style={{border:`1px solid ${BORDER}`,background:SURF3,color:TX2,borderRadius:2,cursor:"pointer",fontFamily:IN,fontSize:14,fontWeight:700,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center"}}>→</button>
         </div>
         <div style={{fontFamily:IN,fontSize:9,fontWeight:600,color:TX3,letterSpacing:"0.1em",textTransform:"uppercase",padding:"0 8px",marginBottom:8}}>Month</div>
-        {MONTHS.map(m=>{const active=month===m;return<button key={m} onClick={()=>{setMonth(m);setSideOpen(false);}} style={{width:"100%",display:"block",textAlign:"left",padding:"7px 12px",borderRadius:8,border:"none",cursor:"pointer",background:active?SURF3:"transparent",color:active?TX1:TX3,fontFamily:IN,fontSize:12,fontWeight:active?700:600,marginBottom:1}}>{m}</button>;})}
+        {MONTHS.map(m=>{const active=month===m;return<button key={m} onClick={()=>{setMonth(m);setSideOpen(false);}} style={{width:"100%",display:"block",textAlign:"left",padding:"7px 12px",borderRadius:3,border:"none",cursor:"pointer",background:active?SURF3:"transparent",color:active?TX1:TX3,fontFamily:IN,fontSize:12,fontWeight:active?700:600,marginBottom:1}}>{m}</button>;})}
       </div>
     </>
   );
@@ -1175,7 +1176,7 @@ export default function App(){
   return(
     <RoleCtx.Provider value={role}>
     <div style={{display:"flex",height:"100vh",overflow:"hidden",background:BG,fontFamily:IN}}>
-      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Inter:wght@600&display=swap" rel="stylesheet"/>
+      <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
       {/* Desktop sidebar */}
       {!isMob&&<div style={{width:220,flexShrink:0,background:SURF,borderRight:`1px solid ${BORDER}`,display:"flex",flexDirection:"column",padding:"24px 0",overflowY:"auto"}}>{sidebarContent}</div>}
@@ -1184,7 +1185,7 @@ export default function App(){
       {isMob&&sideOpen&&<div style={{position:"fixed",inset:0,zIndex:100,display:"flex"}}>
         <div style={{width:240,background:SURF,borderRight:`1px solid ${BORDER}`,display:"flex",flexDirection:"column",padding:"24px 0",overflowY:"auto"}}>
           <div style={{padding:"0 20px 16px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>CGHM</div>
+            <div style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX1,letterSpacing:"0.12em",textTransform:"uppercase"}}>City Garden Hotel</div>
             <button onClick={()=>setSideOpen(false)} style={{border:"none",background:"none",cursor:"pointer",color:TX3,fontSize:20,lineHeight:1,padding:0}}>×</button>
           </div>
           {sidebarContent}
@@ -1205,11 +1206,11 @@ export default function App(){
           <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             {role!=="team"?(
               <>
-                <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:20,padding:"3px 9px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{role}</span>
-                <button onClick={signOut} style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:6,cursor:"pointer",padding:"4px 10px"}}>Sign out</button>
+                <span style={{fontFamily:IN,fontSize:10,fontWeight:700,background:`${TEAL}22`,color:TEAL,border:`1px solid ${TEAL}55`,borderRadius:3,padding:"3px 9px",letterSpacing:"0.06em",textTransform:"uppercase"}}>{role}</span>
+                <button onClick={signOut} style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TX2,border:`1px solid ${BORDER}`,background:SURF3,borderRadius:2,cursor:"pointer",padding:"4px 10px"}}>Sign out</button>
               </>
             ):(
-              <button onClick={()=>{setSideOpen(true);setSigningIn(true);}} style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TEAL,border:`1px solid ${TEAL}55`,background:`${TEAL}18`,borderRadius:6,cursor:"pointer",padding:"4px 10px"}}>Sign in</button>
+              <button onClick={()=>{setSideOpen(true);setSigningIn(true);}} style={{fontFamily:IN,fontSize:11,fontWeight:700,color:TEAL,border:`1px solid ${TEAL}55`,background:`${TEAL}18`,borderRadius:2,cursor:"pointer",padding:"4px 10px"}}>Sign in</button>
             )}
           </div>
         </div>}
@@ -1219,15 +1220,15 @@ export default function App(){
             <Label>Content System · {year}</Label>
             <SectionRule color={TEAL}/>
             <HL size={32}>{tab}</HL>
-            <div style={{fontFamily:IN,fontSize:12,fontWeight:600,color:TX3,marginTop:6}}>{month} {year} · Four locations · Dubai and Abu Dhabi</div>
+            <div style={{fontFamily:IN,fontSize:12,fontWeight:600,color:TX3,marginTop:6}}>{month} {year} · City Garden Hotel Makati</div>
           </div>}
           <div key={month+year+tab}>
             {tab==="Feed Calendar"&&<FeedTab month={month} year={year}/>}
             {tab==="Stories"&&<StoriesTab month={month} year={year}/>}
             {tab==="Analytics"&&(
-              <div style={{textAlign:"center",padding:"80px 20px",border:`1px dashed ${BORDER}`,borderRadius:12}}>
+              <div style={{textAlign:"center",padding:"80px 20px",border:`1px dashed ${BORDER}`,borderRadius:4}}>
                 <SectionRule color={PURPLE}/>
-                <div style={{fontFamily:PF,fontWeight:700,fontStyle:"italic",fontSize:22,color:TX3,marginBottom:8}}>Analytics</div>
+                <div style={{fontFamily:PF,fontWeight:500,fontStyle:"normal",fontSize:22,color:TX3,marginBottom:8}}>Analytics</div>
                 <div style={{fontFamily:IN,fontSize:13,fontWeight:600,color:TX4}}>Coming soon.</div>
               </div>
             )}

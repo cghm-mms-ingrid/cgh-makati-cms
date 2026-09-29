@@ -14,13 +14,13 @@ function useIsMobile(){
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const PILLARS = [
-  { name:"Transformation",  color:"#3B6D11", bg:"#EEF3C7" },
-  { name:"Education",       color:"#0F6E56", bg:"#99F6E4" },
-  { name:"BTS & Culture",   color:"#712B13", bg:"#FF9B9B" },
-  { name:"Client Stories",  color:"#534AB7", bg:"#C4B5FD" },
-  { name:"Founder's Voice", color:"#534AB7", bg:"#C4B5FD" },
+  { name:"Rooms",           color:"#0F6E56", bg:"#99F6E4" },
+  { name:"Amenities",       color:"#3B6D11", bg:"#EEF3C7" },
+  { name:"Banquet",         color:"#534AB7", bg:"#C4B5FD" },
+  { name:"Encima Roofdeck", color:"#712B13", bg:"#FF9B9B" },
+  { name:"Bistro Buffet",   color:"#7A4B00", bg:"#FFD9A0" },
 ];
-const PILLAR_TARGETS = { "Transformation":30,"Education":25,"BTS & Culture":20,"Client Stories":15,"Founder's Voice":10 };
+const PILLAR_TARGETS = { "Rooms":30,"Amenities":10,"Banquet":20,"Encima Roofdeck":20,"Bistro Buffet":20 };
 const DAYS      = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const DAY_IDX   = { Mon:0,Tue:1,Wed:2,Thu:3,Fri:4,Sat:5,Sun:6 };
 const FORMATS   = ["Reel","Carousel","Static","Testimonial","Story Reel"];
@@ -419,8 +419,8 @@ function ContentStats({items,label}){
 
 function PostForm({onAdd,onCancel,type,month,year}){
   const blank=type==="feed"
-    ?{week:"1",day:"Mon",pillar:"Transformation",format:"Reel",subject:"",caption:"",hashtags:"",status:"Draft",comments:[],images:[],video:[]}
-    :{week:"1",day:"Mon",type:"Unique — BTS moment",pillar:"BTS & Culture",frames:"",caption:"",status:"Draft",comments:[],images:[]};
+    ?{week:"1",day:"Mon",pillar:"Rooms",format:"Reel",subject:"",caption:"",hashtags:"",status:"Draft",comments:[],images:[],video:[]}
+    :{week:"1",day:"Mon",type:"Unique — BTS moment",pillar:"Rooms",frames:"",caption:"",status:"Draft",comments:[],images:[]};
   const[d,setD]=useState(blank);
   const[saving,setSaving]=useState(false);
   const u=(k,v)=>setD(x=>({...x,[k]:v}));
